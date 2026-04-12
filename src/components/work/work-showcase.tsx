@@ -137,8 +137,9 @@ const layoutItemVariants: Variants = {
   },
 };
 
-const CARD_MEDIA_HEIGHT = "h-[520px] xl:h-[560px]";
-const FEATURED_CARD_WIDTH = "w-[min(90vw,760px)] shrink-0";
+const CARD_MEDIA_HEIGHT = "h-[480px] sm:h-[520px] xl:h-[560px]";
+const FEATURED_CARD_WIDTH =
+  "w-[84vw] sm:w-[76vw] md:w-[min(90vw,760px)] shrink-0";
 const LOOP_MULTIPLIER = 3;
 
 function mod(n: number, m: number) {
@@ -172,7 +173,7 @@ function ControlButton({
         backgroundColor: active ? "#ff5a1f" : hovered ? "#d9cec1" : "#e2d7cc",
       }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="relative inline-flex h-[42px] w-[42px] items-center justify-center overflow-hidden text-black"
+      className="relative inline-flex h-[46px] w-[46px] items-center justify-center overflow-hidden text-black sm:h-[42px] sm:w-[42px]"
     >
       <motion.span
         animate={{
@@ -204,6 +205,7 @@ type InteractiveProjectCardProps = {
   heightClass?: string;
   onClick?: () => void;
   priority?: boolean;
+  coarsePointer?: boolean;
 };
 
 function InteractiveProjectCard({
@@ -213,6 +215,7 @@ function InteractiveProjectCard({
   heightClass = "h-[420px]",
   onClick,
   priority = false,
+  coarsePointer = false,
 }: InteractiveProjectCardProps) {
   const [hovered, setHovered] = useState(false);
 
@@ -262,6 +265,8 @@ function InteractiveProjectCard({
   });
 
   function handleMove(event: ReactMouseEvent<HTMLDivElement>) {
+    if (coarsePointer) return;
+
     const rect = event.currentTarget.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width;
     const py = (event.clientY - rect.top) / rect.height;
@@ -277,6 +282,8 @@ function InteractiveProjectCard({
   }
 
   function handleEnter(event: ReactMouseEvent<HTMLDivElement>) {
+    if (coarsePointer) return;
+
     setHovered(true);
     glowTarget.set(1);
 
@@ -286,6 +293,8 @@ function InteractiveProjectCard({
   }
 
   function handleLeave() {
+    if (coarsePointer) return;
+
     setHovered(false);
     glowTarget.set(0);
     rotateXRaw.set(0);
@@ -302,17 +311,22 @@ function InteractiveProjectCard({
         onMouseMove={handleMove}
         onMouseEnter={handleEnter}
         onMouseLeave={handleLeave}
-        whileHover={{ y: -4 }}
+        whileHover={coarsePointer ? undefined : { y: -4 }}
+        whileTap={coarsePointer ? { scale: 0.985 } : undefined}
         transition={{ duration: 0.25 }}
-        style={{
-          rotateX,
-          rotateY,
-          transformPerspective: 1400,
-        }}
+        style={
+          coarsePointer
+            ? undefined
+            : {
+                rotateX,
+                rotateY,
+                transformPerspective: 1400,
+              }
+        }
         className={`relative overflow-hidden bg-white will-change-transform ${heightClass}`}
       >
         <motion.div
-          style={{ x: mediaX, y: mediaY }}
+          style={coarsePointer ? undefined : { x: mediaX, y: mediaY }}
           animate={{ scale: hovered ? 1.035 : 1 }}
           transition={{ duration: 0.42, ease: "easeOut" }}
           className="absolute inset-0"
@@ -337,26 +351,36 @@ function InteractiveProjectCard({
           }`}
         />
 
-        <motion.div
-          style={{ x: cursorX, y: cursorY }}
-          animate={{
-            opacity: hovered ? 1 : 0,
-            scale: hovered ? 1 : 0.96,
-          }}
-          transition={{ duration: 0.18, ease: "easeOut" }}
-          className="pointer-events-none absolute left-0 top-0 z-20 -translate-x-1/2 -translate-y-1/2"
-        >
-          <div className="bg-[#ff4d12] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-black shadow-[0_10px_30px_rgba(0,0,0,0.14)]">
-            View Project
+        {!coarsePointer && (
+          <motion.div
+            style={{ x: cursorX, y: cursorY }}
+            animate={{
+              opacity: hovered ? 1 : 0,
+              scale: hovered ? 1 : 0.96,
+            }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="pointer-events-none absolute left-0 top-0 z-20 -translate-x-1/2 -translate-y-1/2"
+          >
+            <div className="bg-[#ff4d12] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-black shadow-[0_10px_30px_rgba(0,0,0,0.14)]">
+              View Project
+            </div>
+          </motion.div>
+        )}
+
+        {coarsePointer && active && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
+            <div className="bg-[#ff4d12] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-black shadow-[0_10px_30px_rgba(0,0,0,0.14)]">
+              Swipe to explore
+            </div>
           </div>
-        </motion.div>
+        )}
       </motion.div>
 
-      <div className="grid grid-cols-[1fr_auto] items-end gap-4 px-1 pt-4">
-        <h2 className="text-[1.75rem] font-medium uppercase tracking-[-0.035em] md:text-[2rem]">
+      <div className="grid grid-cols-1 gap-2 px-1 pt-4 sm:grid-cols-[1fr_auto] sm:items-end sm:gap-4">
+        <h2 className="text-[1.65rem] font-medium uppercase tracking-[-0.035em] md:text-[2rem]">
           {project.title}
         </h2>
-        <p className="text-right text-[12px] uppercase tracking-[0.12em] text-[#767676]">
+        <p className="text-left text-[12px] uppercase tracking-[0.12em] text-[#767676] sm:text-right">
           {project.meta}
         </p>
       </div>
@@ -373,6 +397,7 @@ export function WorkShowcase() {
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
   const [activeIndex, setActiveIndex] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>("featured");
+  const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -390,6 +415,7 @@ export function WorkShowcase() {
   const isDraggingRef = useRef(false);
   const dragPointerIdRef = useRef<number | null>(null);
   const dragStartXRef = useRef(0);
+  const dragStartAtRef = useRef(0);
   const dragStartScrollLeftRef = useRef(0);
   const dragMovedRef = useRef(false);
   const lastDragAtRef = useRef(0);
@@ -421,6 +447,24 @@ export function WorkShowcase() {
   useEffect(() => {
     safeActiveIndexRef.current = safeActiveIndex;
   }, [safeActiveIndex]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(pointer: coarse)");
+
+    const update = () => {
+      setIsCoarsePointer(mediaQuery.matches);
+    };
+
+    update();
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", update);
+      return () => mediaQuery.removeEventListener("change", update);
+    }
+
+    mediaQuery.addListener(update);
+    return () => mediaQuery.removeListener(update);
+  }, []);
 
   useEffect(() => {
     if (!filterOpen) return;
@@ -635,21 +679,46 @@ export function WorkShowcase() {
     setActiveIndex(mod(closestLoopIndex, baseCount));
   }
 
-  function scheduleSnapToMiddleBand() {
+  function resolveSnapTarget(endClientX?: number) {
+    normalizeInfinitePosition();
+
+    const closestLoopIndex = getClosestLoopIndex();
+    if (closestLoopIndex === null || baseCount === 0) return;
+
+    let nextBaseIndex = mod(closestLoopIndex, baseCount);
+
+    if (
+      isCoarsePointer &&
+      typeof endClientX === "number" &&
+      dragMovedRef.current
+    ) {
+      const dx = endClientX - dragStartXRef.current;
+      const dt = Math.max(performance.now() - dragStartAtRef.current, 1);
+      const velocity = Math.abs(dx) / dt;
+
+      if (Math.abs(dx) > 42 || velocity > 0.32) {
+        nextBaseIndex =
+          dx < 0
+            ? mod(nextBaseIndex + 1, baseCount)
+            : mod(nextBaseIndex - 1, baseCount);
+      }
+    }
+
+    setActiveIndex(nextBaseIndex);
+    scrollToCard(middleOffset + nextBaseIndex);
+  }
+
+  function scheduleSnapToMiddleBand(endClientX?: number) {
     if (scrollEndTimeoutRef.current) {
       window.clearTimeout(scrollEndTimeoutRef.current);
     }
 
-    scrollEndTimeoutRef.current = window.setTimeout(() => {
-      normalizeInfinitePosition();
-
-      const closestLoopIndex = getClosestLoopIndex();
-      if (closestLoopIndex === null || baseCount === 0) return;
-
-      const nextBaseIndex = mod(closestLoopIndex, baseCount);
-      setActiveIndex(nextBaseIndex);
-      scrollToCard(middleOffset + nextBaseIndex);
-    }, 110);
+    scrollEndTimeoutRef.current = window.setTimeout(
+      () => {
+        resolveSnapTarget(endClientX);
+      },
+      isCoarsePointer ? 40 : 110,
+    );
   }
 
   function handleScroll() {
@@ -674,6 +743,7 @@ export function WorkShowcase() {
     isDraggingRef.current = true;
     dragPointerIdRef.current = event.pointerId;
     dragStartXRef.current = event.clientX;
+    dragStartAtRef.current = performance.now();
     dragStartScrollLeftRef.current = scrollerRef.current.scrollLeft;
     dragMovedRef.current = false;
 
@@ -704,7 +774,7 @@ export function WorkShowcase() {
     });
   }
 
-  function endPointerDrag(pointerId?: number) {
+  function endPointerDrag(pointerId?: number, endClientX?: number) {
     if (!isDraggingRef.current || !scrollerRef.current) return;
 
     if (pointerId !== undefined && dragPointerIdRef.current === pointerId) {
@@ -718,15 +788,15 @@ export function WorkShowcase() {
     isDraggingRef.current = false;
     dragPointerIdRef.current = null;
 
-    scheduleSnapToMiddleBand();
+    scheduleSnapToMiddleBand(endClientX);
   }
 
   function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
-    endPointerDrag(event.pointerId);
+    endPointerDrag(event.pointerId, event.clientX);
   }
 
   function handlePointerCancel(event: React.PointerEvent<HTMLDivElement>) {
-    endPointerDrag(event.pointerId);
+    endPointerDrag(event.pointerId, event.clientX);
   }
 
   function setFilter(filter: FilterKey) {
@@ -810,7 +880,7 @@ export function WorkShowcase() {
 
           <div
             ref={controlsRef}
-            className="relative z-20 mt-12 grid items-center gap-6 overflow-visible xl:grid-cols-[220px_1fr_220px]"
+            className="relative z-20 mt-10 grid gap-5 overflow-visible lg:mt-12 lg:grid-cols-[220px_1fr_220px] lg:items-center"
           >
             <motion.div
               ref={filterTriggerRef}
@@ -939,8 +1009,8 @@ export function WorkShowcase() {
               </AnimatePresence>
             </motion.div>
 
-            <div className="flex flex-col items-center">
-              <div className="flex flex-wrap items-center justify-center gap-4">
+            <div className="flex flex-col items-start gap-4 lg:items-center">
+              <div className="flex flex-wrap items-center gap-4">
                 {filteredProjects.map((project, index) => {
                   const isActive = index === safeActiveIndex;
 
@@ -977,11 +1047,11 @@ export function WorkShowcase() {
               <motion.span
                 key={activeProject?.id}
                 layout
-                className="mt-2 block h-[10px] w-[10px] bg-[#ff5a1f]"
+                className="mt-1 block h-[10px] w-[10px] bg-[#ff5a1f] lg:mt-2"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center gap-2 lg:justify-end">
               <ControlButton
                 active={viewMode === "split"}
                 onClick={() => changeViewMode("split")}
@@ -1016,6 +1086,18 @@ export function WorkShowcase() {
             </div>
           </div>
 
+          {isCoarsePointer && viewMode === "featured" && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.32, ease: "easeOut" }}
+              className="mt-4 flex items-center gap-3 text-[11px] uppercase tracking-[0.18em] text-black/46"
+            >
+              <span className="h-[8px] w-[8px] rotate-45 bg-[#ff5a1f]" />
+              Swipe horizontally to move one project at a time
+            </motion.div>
+          )}
+
           <div ref={layoutRef} className="relative z-0">
             <AnimatePresence mode="wait">
               {viewMode === "featured" ? (
@@ -1034,7 +1116,7 @@ export function WorkShowcase() {
                   onPointerCancel={handlePointerCancel}
                   onPointerLeave={handlePointerUp}
                 >
-                  <div className="flex min-w-max gap-4 px-[4vw] pb-2">
+                  <div className="flex min-w-max gap-3 px-[6vw] pb-3 sm:gap-4 sm:px-[4vw]">
                     {loopedProjects.map((project, loopIndex) => {
                       const baseIndex = mod(loopIndex, baseCount);
                       const isActive = baseIndex === safeActiveIndex;
@@ -1052,6 +1134,7 @@ export function WorkShowcase() {
                             priority={loopIndex < 2}
                             widthClass={FEATURED_CARD_WIDTH}
                             heightClass={CARD_MEDIA_HEIGHT}
+                            coarsePointer={isCoarsePointer}
                             onClick={() => {
                               if (Date.now() - lastDragAtRef.current < 250) {
                                 return;
@@ -1089,6 +1172,7 @@ export function WorkShowcase() {
                         project={project}
                         widthClass="w-full"
                         heightClass={CARD_MEDIA_HEIGHT}
+                        coarsePointer={isCoarsePointer}
                       />
                     </div>
                   ))}
@@ -1114,6 +1198,7 @@ export function WorkShowcase() {
                         project={project}
                         widthClass="w-full"
                         heightClass={CARD_MEDIA_HEIGHT}
+                        coarsePointer={isCoarsePointer}
                       />
                     </div>
                   ))}

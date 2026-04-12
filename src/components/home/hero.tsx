@@ -62,6 +62,7 @@ export function Hero() {
               src="/images/profile-hero.jpg"
               alt="Marcus Mdluli"
               fill
+              sizes="(max-width: 1023px) 100vw, 50vw"
               priority
               className="object-cover grayscale"
             />

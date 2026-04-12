@@ -102,6 +102,7 @@ function AnimatedPortraitPanel() {
           src="/images/profile-hero.jpg"
           alt="Marcus Mdluli portrait"
           fill
+          sizes="(max-width: 1023px) 100vw, 50vw"
           priority
           className="object-cover grayscale"
         />
@@ -131,7 +132,7 @@ export default function HomePage() {
   return (
     <SiteShell home>
       <section className="min-h-screen bg-black text-white">
-        <div className="grid min-h-screen xl:grid-cols-[1.02fr_0.98fr]">
+        <div className="grid min-h-screen lg:grid-cols-[1.02fr_0.98fr]">
           <motion.div
             initial="hidden"
             animate="show"
@@ -144,7 +145,7 @@ export default function HomePage() {
                 },
               },
             }}
-            className="relative flex min-h-screen items-center border-r border-white/10 px-8 py-14 md:px-12 xl:px-16"
+            className="relative flex min-h-[58svh] items-center border-b border-white/10 px-6 py-20 md:px-10 lg:min-h-screen lg:border-b-0 lg:border-r lg:px-12 xl:px-16"
           >
             <div className="absolute inset-y-0 right-0 w-px bg-white/10" />
 
@@ -205,7 +206,7 @@ export default function HomePage() {
                     transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
                   },
                 }}
-                className="mt-10 flex flex-wrap gap-3"
+                className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               >
                 <PrimaryButton href="/work">View Work</PrimaryButton>
                 <SecondaryButton href="/contact">Contact</SecondaryButton>
@@ -220,7 +221,7 @@ export default function HomePage() {
                     transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
                   },
                 }}
-                className="mt-16 grid gap-6 border-t border-white/10 pt-8 md:grid-cols-3"
+                className="mt-16 grid gap-6 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-3"
               >
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
@@ -256,7 +257,7 @@ export default function HomePage() {
             initial={{ opacity: 0, scale: 1.02 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-            className="relative min-h-[48vh] xl:min-h-screen"
+            className="relative min-h-[48vh] lg:min-h-screen"
           >
             <AnimatedPortraitPanel />
           </motion.div>

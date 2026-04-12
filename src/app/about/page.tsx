@@ -67,8 +67,8 @@ function SectionTag({ children }: { children: ReactNode }) {
 function SectionDivider() {
   return (
     <Reveal y={18}>
-      <div className="mx-auto max-w-[1600px] px-8 md:px-12 xl:px-16">
-        <div className="flex items-center gap-4 py-5">
+      <div className="mx-auto max-w-[1600px] px-5 py-1 md:px-10 lg:px-12 xl:px-16">
+        <div className="flex items-center gap-4 py-4 md:py-5">
           <span className="h-[12px] w-[12px] rotate-45 bg-[#ff4d12]" />
           <div className="h-px flex-1 bg-black/10" />
         </div>
@@ -128,7 +128,7 @@ function StatCard({ value, label }: { value: string; label: string }) {
     <motion.div
       whileHover={{ y: -5 }}
       transition={{ duration: 0.22, ease: "easeOut" }}
-      className="flex min-h-[320px] flex-col justify-between bg-[#090909] p-8"
+      className="flex min-h-[220px] flex-col justify-between bg-[#090909] p-6 md:min-h-[280px] lg:min-h-[320px] lg:p-8"
     >
       <p className="text-[clamp(4rem,8vw,6rem)] font-light leading-none tracking-[-0.08em] text-white">
         {value}
@@ -150,12 +150,14 @@ function ParallaxImage({
   y,
   priority = false,
   className = "",
+  sizes = "(max-width: 1280px) 100vw, 45vw",
 }: {
   src: string;
   alt: string;
   y?: MotionValue<string>;
   priority?: boolean;
   className?: string;
+  sizes?: string;
 }) {
   return (
     <div className={`relative overflow-hidden ${className}`}>
@@ -164,6 +166,7 @@ function ParallaxImage({
           src={src}
           alt={alt}
           fill
+          sizes={sizes}
           priority={priority}
           className="object-cover"
         />
@@ -220,8 +223,11 @@ export default function AboutPage() {
   return (
     <SiteShell>
       <main className="bg-[#f2f2ef] text-black">
-        <section ref={heroRef} className="relative h-[180vh] bg-black">
-          <div className="sticky top-0 h-screen overflow-hidden">
+        <section
+          ref={heroRef}
+          className="relative min-h-[88svh] bg-black lg:h-[180vh]"
+        >
+          <div className="relative min-h-[88svh] overflow-hidden lg:sticky lg:top-0 lg:h-screen lg:min-h-0">
             <motion.div
               style={{ y: heroImageY, scale: heroImageScale }}
               className="absolute inset-0"
@@ -230,6 +236,7 @@ export default function AboutPage() {
                 src={aboutImages.hero}
                 alt="Marcus Mdluli portrait"
                 fill
+                sizes="100vw"
                 priority
                 className="object-cover"
               />
@@ -245,18 +252,18 @@ export default function AboutPage() {
               className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.08),transparent_55%)]"
             />
 
-            <div className="relative z-10 mx-auto flex h-full max-w-[1600px] items-end px-8 pb-16 pt-28 md:px-12 xl:px-16 xl:pb-20">
+            <div className="relative z-10 mx-auto flex h-full min-h-[88svh] max-w-[1600px] items-end px-5 pb-10 pt-[calc(4.5rem+env(safe-area-inset-top))] md:px-10 md:pb-12 md:pt-24 lg:min-h-0 lg:px-12 lg:pt-24 xl:px-16 xl:pb-16">
               <div className="w-full">
                 <motion.p
                   style={{ y: heroBodyY }}
-                  className="text-[0.8rem] uppercase tracking-[0.28em] text-white/55"
+                  className="text-[0.72rem] uppercase tracking-[0.24em] text-white/55 md:text-[0.8rem] md:tracking-[0.28em]"
                 >
                   About Marcus / Frontend / Motion / Visual Systems
                 </motion.p>
 
                 <motion.h1
                   style={{ scale: heroTitleScale, y: heroTitleY }}
-                  className="mt-6 max-w-[1320px] origin-left text-[clamp(3.9rem,9vw,8.3rem)] font-light leading-[0.9] tracking-[-0.08em] text-white"
+                  className="mt-4 max-w-[1320px] origin-left text-[clamp(2.35rem,10.5vw,8.3rem)] font-light leading-[0.94] tracking-[-0.07em] text-white md:mt-6 md:leading-[0.9] md:tracking-[-0.08em]"
                 >
                   One developer.
                   <span className="block">One obsession: craft.</span>
@@ -264,9 +271,9 @@ export default function AboutPage() {
 
                 <motion.div
                   style={{ y: heroBodyY }}
-                  className="mt-10 grid gap-8 xl:grid-cols-[1.15fr_0.85fr] xl:items-end"
+                  className="mt-8 grid gap-6 md:mt-10 md:gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end"
                 >
-                  <p className="max-w-[760px] text-[1.26rem] leading-[1.82] text-white/78">
+                  <p className="max-w-[760px] text-[1.02rem] leading-[1.65] text-white/78 md:text-[1.14rem] md:leading-[1.75] lg:text-[1.26rem] lg:leading-[1.82]">
                     I am a frontend developer focused on visual identity,
                     motion, creative layout systems, and interfaces that feel
                     memorable from the first second. I care about typography,
@@ -274,7 +281,7 @@ export default function AboutPage() {
                     instead of assembled.
                   </p>
 
-                  <div className="xl:justify-self-end">
+                  <div className="pt-1 lg:justify-self-end lg:pt-0">
                     <AboutButton href="/contact" variant="white">
                       Let&apos;s Work Together
                     </AboutButton>
@@ -286,22 +293,22 @@ export default function AboutPage() {
         </section>
 
         <section className="border-y border-black/8 bg-[#f2f2ef]">
-          <div className="mx-auto max-w-[1600px] px-8 py-8 md:px-12 xl:px-16">
+          <div className="mx-auto max-w-[1600px] px-5 py-6 md:px-10 md:py-8 lg:px-12 xl:px-16">
             <Reveal>
-              <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5 text-center">
-                <p className="text-[0.92rem] uppercase tracking-[0.18em] text-black/42">
+              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-center md:gap-x-10 md:gap-y-5">
+                <p className="text-[0.82rem] uppercase tracking-[0.18em] text-black/42 md:text-[0.92rem]">
                   Trusted by
                 </p>
-                <p className="text-[2rem] font-semibold tracking-[-0.05em] text-black/55">
+                <p className="text-[1.45rem] font-semibold tracking-[-0.05em] text-black/55 md:text-[2rem]">
                   Frontend
                 </p>
-                <p className="text-[2rem] font-semibold tracking-[-0.05em] text-black/55">
+                <p className="text-[1.45rem] font-semibold tracking-[-0.05em] text-black/55 md:text-[2rem]">
                   Motion
                 </p>
-                <p className="text-[2rem] font-semibold tracking-[-0.05em] text-black/55">
+                <p className="text-[1.45rem] font-semibold tracking-[-0.05em] text-black/55 md:text-[2rem]">
                   Systems
                 </p>
-                <p className="text-[0.92rem] uppercase tracking-[0.18em] text-black/42">
+                <p className="text-[0.82rem] uppercase tracking-[0.18em] text-black/42 md:text-[0.92rem]">
                   + detail-led execution
                 </p>
               </div>
@@ -312,15 +319,16 @@ export default function AboutPage() {
         <SectionDivider />
 
         <section className="bg-[#f2f2ef]">
-          <div className="mx-auto max-w-[1600px] px-8 py-24 md:px-12 xl:px-16 xl:py-32">
-            <div className="grid gap-14 xl:grid-cols-[0.92fr_1.08fr] xl:items-start">
+          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-10 md:py-20 lg:px-12 xl:px-16 xl:py-32">
+            <div className="grid gap-10 xl:gap-14 xl:grid-cols-[0.92fr_1.08fr] xl:items-start">
               <Reveal>
-                <div ref={storyImageRef}>
+                <div ref={storyImageRef} className="relative">
                   <ParallaxImage
                     src={aboutImages.story}
                     alt="Marcus studio portrait"
                     y={storyImageY}
-                    className="h-[520px] bg-black/5 md:h-[640px]"
+                    className="h-[220px] bg-black/5 sm:h-[300px] md:h-[400px] lg:h-[520px] xl:h-[640px]"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 46vw"
                   />
                 </div>
               </Reveal>
@@ -331,13 +339,13 @@ export default function AboutPage() {
                 </Reveal>
 
                 <Reveal delay={0.06}>
-                  <h2 className="mt-4 text-[clamp(3rem,6vw,5.2rem)] font-light leading-[0.96] tracking-[-0.07em] text-black">
+                  <h2 className="mt-3 text-[clamp(2.1rem,7vw,5.2rem)] font-light leading-[0.98] tracking-[-0.06em] text-black md:mt-4 md:leading-[0.96] md:tracking-[-0.07em]">
                     How I got here
                   </h2>
                 </Reveal>
 
                 <Reveal delay={0.1}>
-                  <div className="mt-10 max-w-[760px] space-y-7 text-[1.22rem] leading-[1.85] text-black/74">
+                  <div className="mt-8 max-w-[760px] space-y-5 text-[1.05rem] leading-[1.72] text-black/74 md:mt-10 md:space-y-7 md:text-[1.22rem] md:leading-[1.85]">
                     <p>
                       I have always been drawn to websites that feel deliberate.
                       Not just clean, but structured. Not just animated, but
@@ -369,21 +377,21 @@ export default function AboutPage() {
         <SectionDivider />
 
         <section className="bg-[#080808] text-white">
-          <div className="mx-auto max-w-[1600px] px-8 py-24 md:px-12 xl:px-16 xl:py-32">
-            <div className="grid gap-16 xl:grid-cols-[0.82fr_1.18fr] xl:items-start">
+          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-10 md:py-20 lg:px-12 xl:px-16 xl:py-32">
+            <div className="grid gap-12 xl:grid-cols-[0.82fr_1.18fr] xl:items-start xl:gap-16">
               <div className="xl:sticky xl:top-28">
                 <Reveal>
                   <SectionTag>{"// How I Work"}</SectionTag>
                 </Reveal>
 
                 <Reveal delay={0.06}>
-                  <h2 className="mt-4 text-[clamp(3rem,6vw,5rem)] font-light leading-[0.96] tracking-[-0.07em] text-white">
+                  <h2 className="mt-3 text-[clamp(2.1rem,7vw,5rem)] font-light leading-[0.98] tracking-[-0.06em] text-white md:mt-4 md:leading-[0.96] md:tracking-[-0.07em]">
                     The way I build
                   </h2>
                 </Reveal>
 
                 <Reveal delay={0.1}>
-                  <p className="mt-8 max-w-[460px] text-[1.14rem] leading-[1.8] text-white/68">
+                  <p className="mt-6 max-w-[460px] text-[1.02rem] leading-[1.68] text-white/68 md:mt-8 md:text-[1.14rem] md:leading-[1.8]">
                     This page is the only long scroll in the site because it
                     should feel like a deeper read. It is where the process,
                     approach, and values have room to breathe.
@@ -391,12 +399,16 @@ export default function AboutPage() {
                 </Reveal>
 
                 <Reveal delay={0.14}>
-                  <div ref={processImageRef} className="mt-12 hidden xl:block">
+                  <div
+                    ref={processImageRef}
+                    className="relative mt-8 xl:mt-12 xl:block"
+                  >
                     <ParallaxImage
                       src={aboutImages.process}
                       alt="Marcus process portrait"
                       y={processImageY}
-                      className="h-[420px] bg-white/5"
+                      className="h-[200px] bg-white/5 sm:h-[260px] md:h-[340px] xl:h-[420px]"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 85vw, 34vw"
                     />
                   </div>
                 </Reveal>
@@ -405,11 +417,11 @@ export default function AboutPage() {
               <div className="space-y-0">
                 {principles.map((item, index) => (
                   <Reveal key={item} delay={index * 0.04} y={26}>
-                    <div className="grid grid-cols-[18px_1fr] gap-5 border-b border-white/10 py-7">
+                    <div className="grid grid-cols-[16px_1fr] gap-4 border-b border-white/10 py-5 md:grid-cols-[18px_1fr] md:gap-5 md:py-7">
                       <div className="flex items-center pt-1">
                         <span className="h-[10px] w-[10px] rotate-45 bg-[#ff4d12]" />
                       </div>
-                      <p className="max-w-[960px] text-[1.24rem] leading-[1.75] text-white/82">
+                      <p className="max-w-[960px] text-[1.05rem] leading-[1.68] text-white/82 md:text-[1.24rem] md:leading-[1.75]">
                         {item}
                       </p>
                     </div>
@@ -423,8 +435,8 @@ export default function AboutPage() {
         <SectionDivider />
 
         <section className="bg-black text-white">
-          <div className="mx-auto max-w-[1600px] px-8 py-20 md:px-12 xl:px-16 xl:py-28">
-            <div className="grid gap-5 xl:grid-cols-[1fr_1fr_1fr_0.98fr]">
+          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-10 md:py-20 lg:px-12 xl:px-16 xl:py-28">
+            <div className="grid gap-3 sm:gap-4 md:gap-5 xl:grid-cols-[1fr_1fr_1fr_0.98fr]">
               {stats.map((stat, index) => (
                 <motion.div
                   key={stat.label}
@@ -450,12 +462,13 @@ export default function AboutPage() {
                   delay: 0.18,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="relative min-h-[320px] overflow-hidden bg-[#151515]"
+                className="relative min-h-[200px] overflow-hidden bg-[#151515] sm:min-h-[260px] md:min-h-[320px]"
               >
                 <Image
                   src={aboutImages.process}
                   alt="Marcus portrait detail"
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 24vw"
                   className="object-cover"
                 />
               </motion.div>
@@ -466,22 +479,23 @@ export default function AboutPage() {
         <SectionDivider />
 
         <section className="bg-[#f2f2ef]">
-          <div className="mx-auto max-w-[1600px] px-8 py-24 md:px-12 xl:px-16 xl:py-32">
-            <div className="grid gap-14 xl:grid-cols-[1.08fr_0.92fr] xl:items-start">
+          <div className="mx-auto max-w-[1600px] px-5 py-14 md:px-10 md:py-20 lg:px-12 xl:px-16 xl:py-32">
+            <div className="grid gap-10 xl:gap-14 xl:grid-cols-[1.08fr_0.92fr] xl:items-start">
               <div>
                 <Reveal>
-                  <h2 className="text-[clamp(3rem,6vw,5.6rem)] font-light leading-[0.94] tracking-[-0.07em] text-black">
+                  <h2 className="text-[clamp(2.1rem,7vw,5.6rem)] font-light leading-[0.96] tracking-[-0.06em] text-black md:leading-[0.94] md:tracking-[-0.07em]">
                     Want to work together?
                   </h2>
                 </Reveal>
 
                 <Reveal delay={0.06}>
-                  <div ref={ctaImageRef} className="mt-10">
+                  <div ref={ctaImageRef} className="relative mt-8 md:mt-10">
                     <ParallaxImage
                       src={aboutImages.cta}
                       alt="Marcus portrait"
                       y={ctaImageY}
-                      className="h-[420px] bg-black/5 md:h-[540px]"
+                      className="h-[240px] bg-black/5 sm:h-[320px] md:h-[400px] lg:h-[420px] xl:h-[540px]"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 90vw, 48vw"
                     />
                   </div>
                 </Reveal>
@@ -489,24 +503,24 @@ export default function AboutPage() {
 
               <div className="xl:pt-2">
                 <Reveal>
-                  <p className="max-w-[640px] text-[clamp(2rem,4vw,3.6rem)] font-light leading-[1.06] tracking-[-0.05em] text-black">
+                  <p className="max-w-[640px] text-[clamp(1.65rem,5.5vw,3.6rem)] font-light leading-[1.12] tracking-[-0.04em] text-black md:leading-[1.06] md:tracking-[-0.05em]">
                     Tell me what you&apos;re building. I&apos;ll tell you how I
                     can help.
                   </p>
                 </Reveal>
 
                 <Reveal delay={0.08}>
-                  <div className="mt-20 space-y-3 text-[1.2rem] leading-[1.7] text-black/76">
+                  <div className="mt-10 space-y-2 text-[1.05rem] leading-[1.65] text-black/76 md:mt-16 md:space-y-3 md:text-[1.2rem] md:leading-[1.7] lg:mt-20">
                     <p>marcusmdle@gmail.com</p>
                     <p>Working with teams worldwide.</p>
                   </div>
                 </Reveal>
 
                 <Reveal delay={0.12}>
-                  <div className="mt-20 flex flex-wrap items-center gap-4">
+                  <div className="mt-12 flex flex-wrap items-center gap-3 md:mt-16 lg:mt-20 lg:gap-4">
                     <TransitionLink
                       href="/contact"
-                      className="text-[1.8rem] leading-none text-black/82 underline underline-offset-8"
+                      className="text-[1.35rem] leading-none text-black/82 underline underline-offset-[6px] md:text-[1.8rem] md:underline-offset-8"
                     >
                       Get Started
                     </TransitionLink>
@@ -518,7 +532,7 @@ export default function AboutPage() {
                 </Reveal>
 
                 <Reveal delay={0.16}>
-                  <p className="mt-24 text-[1.2rem] text-black/68">
+                  <p className="mt-14 text-[1.05rem] text-black/68 md:mt-20 lg:mt-24 md:text-[1.2rem]">
                     Let the details carry the feeling.
                   </p>
                 </Reveal>
