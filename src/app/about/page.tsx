@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { useRef } from "react";
 import {
   motion,
+  useReducedMotion,
   useScroll,
   useTransform,
   type MotionValue,
@@ -16,17 +17,17 @@ import { TransitionLink } from "@/components/layout/page-transition";
 const aboutImages = {
   hero: "/images/contact/about-page.png",
   story: "/images/contact/how-did-er-get-here.png",
-  process: "/images/contact/Creative workspace from a fisheye view.png",
-  cta: "/images/profile-hero.jpg",
+  process: "/images/contact/building-blocks.png",
+  cta: "/images/contact/last-image.png",
 };
 
 const principles = [
-  "I design with hierarchy, proportion, rhythm, and contrast before decoration.",
-  "Motion should direct attention, connect sections, and give the interface intention.",
-  "I care about typography, spacing, alignment, interaction states, and visual control.",
-  "I like work that feels graphic and memorable without becoming noisy or hard to use.",
-  "I build with modern frontend tools, but I want the final result to feel human and authored.",
-  "I would rather make a few sections unforgettable than make an entire site feel generic.",
+  "Everything starts with structure. If that’s right, everything else follows.",
+  "Motion has a job. If it doesn’t add meaning, I don’t use it.",
+  "Details matter more than people think—spacing, type, alignment, all of it.",
+  "I like work that feels different, but still makes sense immediately.",
+  "I don’t separate design and frontend—they shape each other.",
+  "I care more about making something feel real than making it look impressive.",
 ];
 
 const stats = [
@@ -175,6 +176,67 @@ function ParallaxImage({
   );
 }
 
+function ProcessCubeOverlay({ progress }: { progress: MotionValue<number> }) {
+  const reduceMotion = useReducedMotion();
+
+  const c1x = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-10, 12]);
+  const c1y = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-18, 14]);
+  const c1r = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-4, 6]);
+
+  const c2x = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [8, -10]);
+  const c2y = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-12, 10]);
+  const c2r = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [3, -5]);
+
+  const c3x = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-6, 8]);
+  const c3y = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [12, -10]);
+  const c3r = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [-2, 4]);
+
+  const c4x = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [10, -6]);
+  const c4y = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [16, -14]);
+  const c4r = useTransform(progress, [0, 1], reduceMotion ? [0, 0] : [5, -3]);
+
+  const accentY = useTransform(
+    progress,
+    [0, 1],
+    reduceMotion ? [0, 0] : [-8, 10],
+  );
+  const accentX = useTransform(
+    progress,
+    [0, 1],
+    reduceMotion ? [0, 0] : [0, 6],
+  );
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      <motion.span
+        style={{ x: c1x, y: c1y, rotate: c1r }}
+        className="absolute left-[12%] top-[16%] h-10 w-10 border border-white/16 bg-white/5 backdrop-blur-[1px]"
+      />
+
+      <motion.span
+        style={{ x: c2x, y: c2y, rotate: c2r }}
+        className="absolute right-[20%] top-[22%] h-8 w-8 border border-white/14 bg-white/4"
+      />
+
+      <motion.span
+        style={{ x: c3x, y: c3y, rotate: c3r }}
+        className="absolute left-[34%] bottom-[18%] h-12 w-12 border border-white/14 bg-white/[0.03]"
+      />
+
+      <motion.span
+        style={{ x: c4x, y: c4y, rotate: c4r }}
+        className="absolute right-[14%] bottom-[24%] h-9 w-9 border border-white/12 bg-white/[0.025]"
+      />
+
+      <motion.span
+        style={{ x: accentX, y: accentY }}
+        className="absolute left-[58%] top-[28%] h-3 w-3 rotate-45 bg-[#ff4d12]/90"
+      />
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/18 via-transparent to-transparent" />
+    </div>
+  );
+}
 export default function AboutPage() {
   const heroRef = useRef<HTMLElement | null>(null);
   const storyImageRef = useRef<HTMLDivElement | null>(null);
@@ -347,25 +409,25 @@ export default function AboutPage() {
                 <Reveal delay={0.1}>
                   <div className="mt-8 max-w-[760px] space-y-5 text-[1.05rem] leading-[1.72] text-black/74 md:mt-10 md:space-y-7 md:text-[1.22rem] md:leading-[1.85]">
                     <p>
-                      I have always been drawn to websites that feel deliberate.
-                      Not just clean, but structured. Not just animated, but
-                      alive in the right places.
+                      I’m drawn to work that feels like it was meant to be the
+                      way it is. Not overdesigned. Not over-animated. Just
+                      intentional.
                     </p>
                     <p>
-                      What started as curiosity turned into an obsession with
-                      frontend craft, motion systems, and visual decisions that
-                      make a page feel expensive before a user even reads the
-                      copy.
+                      That’s what pulled me into both design and
+                      frontend—wanting to understand how visuals, motion, and
+                      structure come together to create that feeling. So I
+                      learned to do both.
                     </p>
                     <p>
-                      My taste leans toward graphic layouts, sharp hierarchy,
-                      restrained interaction, and work that carries personality
-                      without losing clarity. I like interfaces that feel
-                      authored.
+                      Now I approach everything as one process: directing how
+                      something looks, how it moves, and how it lives in the
+                      browser. I pay attention to hierarchy, pacing, and the
+                      details that quietly shape the experience.
                     </p>
                     <p>
-                      That is what I want my work to communicate: intention,
-                      control, and a point of view that is difficult to forget.
+                      I don’t just want to make things that work. I want to make
+                      things that feel like someone was behind them.
                     </p>
                   </div>
                 </Reveal>
@@ -392,24 +454,22 @@ export default function AboutPage() {
 
                 <Reveal delay={0.1}>
                   <p className="mt-6 max-w-[460px] text-[1.02rem] leading-[1.68] text-white/68 md:mt-8 md:text-[1.14rem] md:leading-[1.8]">
-                    This page is the only long scroll in the site because it
-                    should feel like a deeper read. It is where the process,
-                    approach, and values have room to breathe.
+                    Im weird and that makes me think differently and look at
+                    things differently.
                   </p>
                 </Reveal>
 
                 <Reveal delay={0.14}>
-                  <div
-                    ref={processImageRef}
-                    className="relative mt-8 xl:mt-12 xl:block"
-                  >
-                    <ParallaxImage
-                      src={aboutImages.process}
-                      alt="Marcus process portrait"
-                      y={processImageY}
-                      className="h-[200px] bg-white/5 sm:h-[260px] md:h-[340px] xl:h-[420px]"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 85vw, 34vw"
-                    />
+                  <div ref={processImageRef} className="mt-10 hidden xl:block">
+                    <div className="relative h-[420px] overflow-hidden bg-white/5">
+                      <ParallaxImage
+                        src={aboutImages.process}
+                        alt="Marcus process portrait"
+                        y={processImageY}
+                        className="h-full"
+                      />
+                      <ProcessCubeOverlay progress={processImageProgress} />
+                    </div>
                   </div>
                 </Reveal>
               </div>

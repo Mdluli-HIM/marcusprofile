@@ -115,14 +115,9 @@ function AnimatedPortraitPanel() {
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute bottom-6 left-6 border border-white/10 bg-black/88 px-5 py-4 text-white backdrop-blur-[2px]"
+        className="absolute bottom-6 left-6 border border-white/10 bg-[#ff4d12] px-5 py-4 text-white backdrop-blur-[2px]"
       >
-        <p className="text-[0.68rem] uppercase tracking-[0.22em] text-white/55">
-          Selected Style
-        </p>
-        <p className="mt-2 text-[1rem] uppercase tracking-[0.04em]">
-          Weird / Graphic / Premium
-        </p>
+      
       </motion.div>
     </motion.div>
   );

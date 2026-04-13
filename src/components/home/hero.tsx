@@ -69,14 +69,7 @@ export function Hero() {
             <div className="absolute inset-0 bg-black/25" />
           </motion.div>
 
-          <div className="absolute bottom-10 left-10 border border-[#f5eadb]/20 bg-[#1b120d] px-5 py-4">
-            <p className="text-[10px] uppercase tracking-[0.24em] text-[#c9b29d]">
-              Selected Style
-            </p>
-            <p className="mt-2 text-sm uppercase tracking-[0.08em]">
-              Weird / Graphic / Premium
-            </p>
-          </div>
+          
         </div>
       </div>
     </section>

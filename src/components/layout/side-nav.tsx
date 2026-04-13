@@ -1,31 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
-import type { SVGProps } from "react";
+import type { ComponentType, SVGProps } from "react";
 import { useMemo, useState } from "react";
 
 type IconProps = SVGProps<SVGSVGElement>;
-
-function HomeGlyph(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <path
-        d="M4.75 10.25 12 4.5l7.25 5.75"
-        strokeWidth="1.65"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M7.5 9.75V19h9V9.75"
-        strokeWidth="1.65"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 function ProfileGlyph(props: IconProps) {
   return (
@@ -40,53 +22,25 @@ function ProfileGlyph(props: IconProps) {
   );
 }
 
-function WorkGlyph(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <rect
-        x="4.5"
-        y="7.5"
-        width="15"
-        height="10.25"
-        rx="1.7"
-        strokeWidth="1.65"
-      />
-      <path
-        d="M9 7.5v-.65c0-1 .75-1.75 1.75-1.75h2.5c1 0 1.75.75 1.75 1.75v.65"
-        strokeWidth="1.65"
-        strokeLinecap="round"
-      />
-      <path d="M4.5 11.5h15" strokeWidth="1.65" />
-    </svg>
-  );
-}
+const HOME_NAV_ICON_SRC = "/images/nav-icons/home.png";
+const BURGER_MENU_ICON_SRC = "/images/nav-icons/burger-menu.png";
+/** Work icon: Execution by gravisio — https://www.flaticon.com/free-icons/execution (Flaticon license) */
+const WORK_NAV_ICON_SRC = "/images/nav-icons/project-management.png";
+/** Contact icon: Paul J. — https://www.flaticon.com/free-icons/contact (Flaticon license) */
+const CONTACT_NAV_ICON_SRC = "/images/nav-icons/contact-icon.png";
 
-function MailGlyph(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" {...props}>
-      <rect
-        x="4.5"
-        y="6.5"
-        width="15"
-        height="11"
-        rx="1.7"
-        strokeWidth="1.65"
-      />
-      <path
-        d="m6.25 8.25 5.75 4.35 5.75-4.35"
-        strokeWidth="1.65"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
+type NavItem = {
+  href: string;
+  label: string;
+  icon?: ComponentType<IconProps>;
+  imageSrc?: string;
+};
 
-const navItems = [
-  { href: "/", label: "HOME", icon: HomeGlyph },
+const navItems: NavItem[] = [
+  { href: "/", label: "HOME", imageSrc: HOME_NAV_ICON_SRC },
   { href: "/about", label: "ABOUT", icon: ProfileGlyph },
-  { href: "/work", label: "WORK", icon: WorkGlyph },
-  { href: "/contact", label: "CONTACT", icon: MailGlyph },
+  { href: "/work", label: "WORK", imageSrc: WORK_NAV_ICON_SRC },
+  { href: "/contact", label: "CONTACT", imageSrc: CONTACT_NAV_ICON_SRC },
 ];
 
 function isActive(pathname: string, href: string) {
@@ -117,28 +71,36 @@ export function SideNav() {
           <button
             type="button"
             onClick={() => setOpen((prev) => !prev)}
-            aria-label="Toggle menu"
-            className="relative grid h-11 w-11 place-items-center border border-black/10 bg-white text-black transition hover:border-black/20"
+            aria-expanded={open}
+            aria-label={open ? "Close menu" : "Open menu"}
+            className={`relative grid h-11 w-11 place-items-center text-black transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff4d12] ${
+              open ? "opacity-100" : "opacity-[0.78] hover:opacity-100"
+            }`}
           >
             <motion.span
-              animate={open ? { rotate: 45, y: 0 } : { rotate: 0, y: -4 }}
+              animate={{ rotate: open ? 90 : 0 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="absolute h-[1.5px] w-5 bg-current"
-            />
-            <motion.span
-              animate={open ? { rotate: -45, y: 0 } : { rotate: 0, y: 4 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              className="absolute h-[1.5px] w-5 bg-current"
-            />
+              className="relative flex h-[20px] w-[20px] items-center justify-center"
+            >
+              <Image
+                src={BURGER_MENU_ICON_SRC}
+                alt=""
+                width={20}
+                height={20}
+                className="h-[20px] w-[20px] object-contain"
+                aria-hidden
+              />
+            </motion.span>
           </button>
 
           <nav
             className="flex flex-col items-center gap-3"
             onMouseLeave={() => setHoveredHref(null)}
           >
-            {navItems.map(({ href, label, icon: Icon }) => {
+            {navItems.map(({ href, label, icon: Icon, imageSrc }) => {
               const isCurrent = activeHref === href;
               const showIndicator = indicatorHref === href;
+              const emphasized = isCurrent || hoveredHref === href;
 
               return (
                 <Link
@@ -168,15 +130,30 @@ export function SideNav() {
                       />
                     )}
 
-                    <span
-                      className={`relative z-10 transition-colors duration-200 ${
-                        isCurrent || hoveredHref === href
-                          ? "text-black"
-                          : "text-black/78"
-                      }`}
-                    >
-                      <Icon className="h-[20px] w-[20px]" />
-                    </span>
+                    {imageSrc ? (
+                      <span
+                        className={`relative z-10 transition-opacity duration-200 ${
+                          emphasized ? "opacity-100" : "opacity-[0.78]"
+                        }`}
+                      >
+                        <Image
+                          src={imageSrc}
+                          alt=""
+                          width={20}
+                          height={20}
+                          className="h-[20px] w-[20px] object-contain"
+                          aria-hidden
+                        />
+                      </span>
+                    ) : Icon ? (
+                      <span
+                        className={`relative z-10 transition-colors duration-200 ${
+                          emphasized ? "text-black" : "text-black/78"
+                        }`}
+                      >
+                        <Icon className="h-[20px] w-[20px]" />
+                      </span>
+                    ) : null}
                   </motion.div>
                 </Link>
               );
@@ -197,19 +174,26 @@ export function SideNav() {
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          aria-label="Toggle menu"
-          className="relative grid h-11 w-11 place-items-center rounded-full border border-black/10 bg-[#f2f2ef]/92 text-black backdrop-blur-md"
+          aria-expanded={open}
+          aria-label={open ? "Close menu" : "Open menu"}
+          className={`relative grid h-11 w-11 place-items-center rounded-full text-black backdrop-blur-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff4d12] ${
+            open ? "opacity-100" : "opacity-[0.78] hover:opacity-100"
+          }`}
         >
           <motion.span
-            animate={open ? { rotate: 45, y: 0 } : { rotate: 0, y: -4 }}
+            animate={{ rotate: open ? 90 : 0 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute h-[1.5px] w-5 bg-current"
-          />
-          <motion.span
-            animate={open ? { rotate: -45, y: 0 } : { rotate: 0, y: 4 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="absolute h-[1.5px] w-5 bg-current"
-          />
+            className="relative flex h-[20px] w-[20px] items-center justify-center"
+          >
+            <Image
+              src={BURGER_MENU_ICON_SRC}
+              alt=""
+              width={20}
+              height={20}
+              className="h-[20px] w-[20px] object-contain"
+              aria-hidden
+            />
+          </motion.span>
         </button>
       </div>
 
@@ -217,9 +201,10 @@ export function SideNav() {
         className="fixed bottom-4 left-1/2 z-50 flex w-[calc(100%-24px)] max-w-[360px] -translate-x-1/2 items-center justify-between rounded-full border border-black/10 bg-[#f2f2ef]/94 px-3 py-2 text-black shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-md lg:hidden"
         onMouseLeave={() => setMobileHoveredHref(null)}
       >
-        {navItems.map(({ href, label, icon: Icon }) => {
+        {navItems.map(({ href, label, icon: Icon, imageSrc }) => {
           const isCurrent = activeHref === href;
           const showIndicator = mobileIndicatorHref === href;
+          const emphasized = isCurrent || mobileHoveredHref === href;
 
           return (
             <Link
@@ -248,15 +233,30 @@ export function SideNav() {
                   />
                 )}
 
-                <span
-                  className={`relative z-10 transition-colors duration-200 ${
-                    isCurrent || mobileHoveredHref === href
-                      ? "text-black"
-                      : "text-black/70"
-                  }`}
-                >
-                  <Icon className="h-[20px] w-[20px]" />
-                </span>
+                {imageSrc ? (
+                  <span
+                    className={`relative z-10 transition-opacity duration-200 ${
+                      emphasized ? "opacity-100" : "opacity-70"
+                    }`}
+                  >
+                    <Image
+                      src={imageSrc}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="h-[20px] w-[20px] object-contain"
+                      aria-hidden
+                    />
+                  </span>
+                ) : Icon ? (
+                  <span
+                    className={`relative z-10 transition-colors duration-200 ${
+                      emphasized ? "text-black" : "text-black/70"
+                    }`}
+                  >
+                    <Icon className="h-[20px] w-[20px]" />
+                  </span>
+                ) : null}
               </motion.div>
             </Link>
           );
@@ -293,21 +293,39 @@ export function SideNav() {
                 <span className="block text-[#ff4d12]">Developer</span>
               </h2>
 
-              <nav className="mt-10 space-y-5 lg:mt-12">
+              <nav
+                className="mt-10 flex flex-col gap-5 lg:mt-12"
+                onMouseLeave={() => setHoveredHref(null)}
+              >
                 {navItems.map(({ href, label }) => {
-                  const active = activeHref === href;
+                  const showFlyoutIndicator = indicatorHref === href;
+                  const accentLabel = showFlyoutIndicator;
 
                   return (
                     <Link
                       key={label}
                       href={href}
                       onClick={() => setOpen(false)}
-                      className={`group inline-flex items-center gap-3 text-[1.8rem] font-black uppercase tracking-[0.03em] transition lg:text-[2rem] ${
-                        active ? "text-[#ff4d12]" : "text-black hover:text-[#ff4d12]"
+                      onMouseEnter={() => setHoveredHref(href)}
+                      onFocus={() => setHoveredHref(href)}
+                      onBlur={() => setHoveredHref(null)}
+                      className={`relative block w-full py-1 pl-9 text-left text-[1.8rem] font-black uppercase leading-none tracking-[0.03em] transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff4d12]/35 focus-visible:ring-offset-2 focus-visible:ring-offset-[#f2f2ef] lg:text-[2rem] ${
+                        accentLabel ? "text-[#ff4d12]" : "text-black"
                       }`}
                     >
-                      <span className="block h-[2px] w-0 bg-[#ff4d12] transition-all duration-300 group-hover:w-7" />
-                      {label}
+                      {showFlyoutIndicator && (
+                        <motion.span
+                          layoutId="flyout-nav-indicator"
+                          className="absolute left-0 top-1/2 h-[2px] w-7 -translate-y-1/2 rounded-full bg-[#ff4d12]"
+                          transition={{
+                            type: "spring",
+                            stiffness: 520,
+                            damping: 38,
+                            mass: 0.7,
+                          }}
+                        />
+                      )}
+                      <span className="relative">{label}</span>
                     </Link>
                   );
                 })}

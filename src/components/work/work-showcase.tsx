@@ -874,7 +874,7 @@ export function WorkShowcase() {
               ref={titleRef}
               className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]"
             >
-              Our Craft
+             PROJECTS
             </h1>
           </div>
 
