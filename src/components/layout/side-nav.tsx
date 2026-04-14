@@ -48,11 +48,76 @@ function isActive(pathname: string, href: string) {
   return pathname.startsWith(href);
 }
 
+function GalleryEgg({ mobile = false }: { mobile?: boolean }) {
+  return (
+    <Link
+      href="/gallery"
+      aria-label="Open gallery"
+      className={mobile ? "inline-flex" : "block"}
+    >
+      <motion.div
+        initial={false}
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{
+          duration: 4.8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        whileHover={{
+          scale: 1.05,
+          rotate: 2,
+        }}
+        whileTap={{ scale: 0.96 }}
+        className={`group relative flex items-center justify-center ${
+          mobile
+            ? "h-10 w-10 rounded-full border border-black/10 bg-[#f2f2ef]/92 backdrop-blur-md"
+            : "h-10 w-10"
+        }`}
+      >
+        <motion.span
+          className={`absolute border border-black/16 transition-colors duration-200 group-hover:border-[#ff4d12]/55 ${
+            mobile ? "h-[14px] w-[14px]" : "h-[16px] w-[16px]"
+          }`}
+        />
+
+        <motion.span
+          initial={false}
+          animate={{
+            opacity: [0.3, 0.72, 0.3],
+            scale: [1, 1.08, 1],
+          }}
+          transition={{
+            duration: 3.1,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className={`absolute bg-[#ff4d12] ${
+            mobile ? "h-[5px] w-[5px]" : "h-[6px] w-[6px]"
+          }`}
+        />
+
+        {!mobile && (
+          <motion.span
+            initial={{ opacity: 0, x: -4 }}
+            whileHover={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.18 }}
+            className="pointer-events-none absolute left-[calc(100%+12px)] whitespace-nowrap text-[10px] uppercase tracking-[0.22em] text-black/42"
+          >
+            Gallery
+          </motion.span>
+        )}
+      </motion.div>
+    </Link>
+  );
+}
+
 export function SideNav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
-  const [mobileHoveredHref, setMobileHoveredHref] = useState<string | null>(null);
+  const [mobileHoveredHref, setMobileHoveredHref] = useState<string | null>(
+    null,
+  );
 
   const activeHref = useMemo(() => {
     const found = navItems.find((item) => isActive(pathname, item.href));
@@ -160,8 +225,14 @@ export function SideNav() {
             })}
           </nav>
 
-          <div className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white text-black">
-            <span className="text-[10px] font-medium tracking-[0.18em]">MM</span>
+          <div className="flex flex-col items-center gap-4">
+            <GalleryEgg />
+
+            <div className="grid h-10 w-10 place-items-center rounded-full border border-black/10 bg-white text-black">
+              <span className="text-[10px] font-medium tracking-[0.18em]">
+                MM
+              </span>
+            </div>
           </div>
         </div>
       </aside>
@@ -171,30 +242,34 @@ export function SideNav() {
           MM
         </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen((prev) => !prev)}
-          aria-expanded={open}
-          aria-label={open ? "Close menu" : "Open menu"}
-          className={`relative grid h-11 w-11 place-items-center rounded-full text-black backdrop-blur-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff4d12] ${
-            open ? "opacity-100" : "opacity-[0.78] hover:opacity-100"
-          }`}
-        >
-          <motion.span
-            animate={{ rotate: open ? 90 : 0 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-            className="relative flex h-[20px] w-[20px] items-center justify-center"
+        <div className="flex items-center gap-2">
+          <GalleryEgg mobile />
+
+          <button
+            type="button"
+            onClick={() => setOpen((prev) => !prev)}
+            aria-expanded={open}
+            aria-label={open ? "Close menu" : "Open menu"}
+            className={`relative grid h-11 w-11 place-items-center rounded-full text-black backdrop-blur-md transition-opacity duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ff4d12] ${
+              open ? "opacity-100" : "opacity-[0.78] hover:opacity-100"
+            }`}
           >
-            <Image
-              src={BURGER_MENU_ICON_SRC}
-              alt=""
-              width={20}
-              height={20}
-              className="h-[20px] w-[20px] object-contain"
-              aria-hidden
-            />
-          </motion.span>
-        </button>
+            <motion.span
+              animate={{ rotate: open ? 90 : 0 }}
+              transition={{ duration: 0.22, ease: "easeOut" }}
+              className="relative flex h-[20px] w-[20px] items-center justify-center"
+            >
+              <Image
+                src={BURGER_MENU_ICON_SRC}
+                alt=""
+                width={20}
+                height={20}
+                className="h-[20px] w-[20px] object-contain"
+                aria-hidden
+              />
+            </motion.span>
+          </button>
+        </div>
       </div>
 
       <nav

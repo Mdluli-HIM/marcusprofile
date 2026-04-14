@@ -13,6 +13,7 @@ import {
 import { Plus } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 import { TransitionLink } from "@/components/layout/page-transition";
+import Link from "next/link";
 
 const aboutImages = {
   hero: "/images/contact/about-page.png",
@@ -81,34 +82,38 @@ function SectionDivider() {
 function AboutButton({
   href,
   children,
-  variant = "orange",
+  variant = "red",
 }: {
   href: string;
   children: ReactNode;
-  variant?: "orange" | "white" | "black";
+  variant?: "red" | "black" | "white";
 }) {
-  const colors =
+  const wrapperClass =
+    variant === "white" ? "shadow-[0_10px_30px_rgba(0,0,0,0.06)]" : "";
+
+  const mainClass =
     variant === "black"
-      ? {
-          main: "bg-black text-white",
-          side: "bg-black text-white",
-        }
+      ? "bg-black text-white"
       : variant === "white"
-        ? {
-            main: "bg-white text-black",
-            side: "bg-white text-black",
-          }
-        : {
-            main: "bg-[#ff4d12] text-black",
-            side: "bg-[#ff4d12] text-black",
-          };
+        ? "bg-white text-black border border-black/12"
+        : "bg-[#ff4d12] text-black";
+
+  const iconClass =
+    variant === "black"
+      ? "bg-black text-white"
+      : variant === "white"
+        ? "bg-white text-black border border-l-0 border-black/12"
+        : "bg-[#ff4d12] text-black";
 
   return (
-    <TransitionLink href={href} className="group inline-flex items-stretch">
+    <Link
+      href={href}
+      className={`group inline-flex items-stretch ${wrapperClass}`}
+    >
       <motion.span
         whileHover={{ y: -1 }}
         transition={{ duration: 0.18 }}
-        className={`inline-flex h-[56px] items-center px-7 text-[0.92rem] font-medium uppercase tracking-[0.08em] ${colors.main}`}
+        className={`inline-flex h-[52px] items-center px-6 text-[0.84rem] font-medium uppercase tracking-[0.08em] sm:h-[56px] sm:px-7 sm:text-[0.92rem] ${mainClass}`}
       >
         {children}
       </motion.span>
@@ -116,11 +121,11 @@ function AboutButton({
       <motion.span
         whileHover={{ y: -1 }}
         transition={{ duration: 0.18 }}
-        className={`inline-flex h-[56px] w-[56px] items-center justify-center ${colors.side}`}
+        className={`inline-flex h-[52px] w-[52px] items-center justify-center sm:h-[56px] sm:w-[56px] ${iconClass}`}
       >
         <Plus size={18} strokeWidth={2.2} />
       </motion.span>
-    </TransitionLink>
+    </Link>
   );
 }
 
@@ -563,9 +568,11 @@ export default function AboutPage() {
 
               <div className="xl:pt-2">
                 <Reveal>
-                  <p className="max-w-[640px] text-[clamp(1.65rem,5.5vw,3.6rem)] font-light leading-[1.12] tracking-[-0.04em] text-black md:leading-[1.06] md:tracking-[-0.05em]">
-                    Tell me what you&apos;re building. I&apos;ll tell you how I
-                    can help.
+                  <p className="max-w-[640px] text-[clamp(1.8rem,6vw,3.6rem)] font-light leading-[1.08] tracking-[-0.05em] text-black">
+                    Tell me what you&apos;re{" "}
+                    <span className="text-[#ff4d12]">building</span>.
+                    <br className="hidden sm:block" />
+                    I&apos;ll tell you how I can help.
                   </p>
                 </Reveal>
 
@@ -585,7 +592,7 @@ export default function AboutPage() {
                       Get Started
                     </TransitionLink>
 
-                    <AboutButton href="/contact" variant="black">
+                    <AboutButton href="/contact" variant="white">
                       Book a 15-min Call
                     </AboutButton>
                   </div>

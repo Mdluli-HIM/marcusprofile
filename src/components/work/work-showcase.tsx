@@ -15,6 +15,7 @@ import {
   motion,
   type Variants,
   useMotionValue,
+  useReducedMotion,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -29,6 +30,7 @@ import {
 import gsap from "gsap";
 import { Flip, SplitText } from "gsap/all";
 import { useGSAP } from "@gsap/react";
+import Link from "next/link";
 
 gsap.registerPlugin(Flip, SplitText, useGSAP);
 
@@ -388,6 +390,69 @@ function InteractiveProjectCard({
   );
 }
 
+function GalleryTriggerFill({ span = 1 }: { span?: 1 | 2 }) {
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <div
+      className={`hidden xl:block ${span === 2 ? "xl:col-span-2" : "xl:col-span-1"}`}
+    >
+      <div className="flex h-[520px] items-center justify-center">
+        <Link
+          href="/gallery"
+          aria-label="Open gallery"
+          className="group relative inline-flex items-center justify-center"
+        >
+          <motion.div
+            animate={
+              reduceMotion
+                ? {}
+                : {
+                    y: [0, -8, 0],
+                    rotate: [0, 4, 0],
+                    scale: [1, 1.03, 1],
+                  }
+            }
+            transition={{
+              duration: 5.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="relative h-[128px] w-[128px] bg-[#ff4d12]"
+          >
+            <motion.span
+              animate={
+                reduceMotion
+                  ? {}
+                  : {
+                      opacity: [0.45, 0.9, 0.45],
+                    }
+              }
+              transition={{
+                duration: 2.4,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-0 border border-black/25"
+            />
+
+            <motion.span
+              initial={{ opacity: 0, y: 6 }}
+              whileHover={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.18 }}
+              className="absolute left-1/2 top-[calc(100%+18px)] -translate-x-1/2 whitespace-nowrap text-[10px] uppercase tracking-[0.24em] text-black/52"
+            >
+              gallery
+            </motion.span>
+
+            <span className="absolute left-1/2 top-1/2 h-[18px] w-[18px] -translate-x-1/2 -translate-y-1/2 border border-black/40 bg-transparent" />
+          </motion.div>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
 export function WorkShowcase() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHovered, setFilterHovered] = useState(false);
@@ -443,6 +508,9 @@ export function WorkShowcase() {
     baseCount === 0 ? 0 : Math.min(activeIndex, baseCount - 1);
 
   const activeProject = filteredProjects[safeActiveIndex] ?? null;
+  const gridRemainder = filteredProjects.length % 3;
+  const showGridAmbientFill = viewMode === "grid" && gridRemainder !== 0;
+  const gridAmbientSpan = gridRemainder === 1 ? 2 : 1;
 
   useEffect(() => {
     safeActiveIndexRef.current = safeActiveIndex;
@@ -874,7 +942,7 @@ export function WorkShowcase() {
               ref={titleRef}
               className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]"
             >
-             PROJECTS
+              PROJECTS
             </h1>
           </div>
 
@@ -1202,6 +1270,9 @@ export function WorkShowcase() {
                       />
                     </div>
                   ))}
+                  {showGridAmbientFill && (
+                    <GalleryTriggerFill span={gridAmbientSpan as 1 | 2} />
+                  )}
                 </motion.div>
               ) : null}
             </AnimatePresence>
