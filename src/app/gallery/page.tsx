@@ -11,64 +11,7 @@ import {
 } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
-
-type Sketch = {
-  id: string;
-  title: string;
-  artist: string;
-  year: string;
-  medium: string;
-  note: string;
-  image: string;
-};
-
-const sketches: Sketch[] = [
-  {
-    id: "glass-blocks",
-    title: "Glass Blocks",
-    artist: "Marcus Mdluli",
-    year: "2025",
-    medium: "Three.js / WebGL / Motion",
-    note: "Atmosphere, glass density, reflected light, and subtle red tension.",
-    image: "/images/gallery/sketch-1.jpg",
-  },
-  {
-    id: "museum-frame",
-    title: "Museum Frame",
-    artist: "Marcus Mdluli",
-    year: "2025",
-    medium: "Editorial Layout / Motion",
-    note: "A framing study built around negative space and cinematic pacing.",
-    image: "/images/gallery/image.png",
-  },
-  {
-    id: "red-wall",
-    title: "Red Wall",
-    artist: "Marcus Mdluli",
-    year: "2025",
-    medium: "Creative Direction / Frontend",
-    note: "A dense gallery composition focused on richness, curation, and rhythm.",
-    image: "/images/gallery/sketch-3.jpg",
-  },
-  {
-    id: "portrait-study",
-    title: "Portrait Study",
-    artist: "Marcus Mdluli",
-    year: "2024",
-    medium: "Image Rhythm / UI System",
-    note: "A study in crop, spacing, and collectible visual tension.",
-    image: "/images/gallery/sketch-6.jpg",
-  },
-  {
-    id: "motion-study",
-    title: "Motion Study",
-    artist: "Marcus Mdluli",
-    year: "2024",
-    medium: "Framer Motion / Scroll",
-    note: "A quiet movement study focused on detail rather than spectacle.",
-    image: "/images/gallery/sketch-5.jpg",
-  },
-];
+import { sketches, type Sketch } from "@/data/gallery";
 
 const stageVariants: Variants = {
   enter: (direction: number) => ({
@@ -111,7 +54,7 @@ function HeaderBar() {
     <div className="flex items-center justify-between border-b border-black/10 px-6 py-5 text-[10px] uppercase tracking-[0.22em] text-black/72 sm:px-8 lg:px-10">
       <p className="text-black/88"></p>
       <div className="flex items-center gap-4">
-        <span className="hidden sm:inline">sketch</span>
+        <span className="hidden sm:inline">Graphic</span>
         <span>Designs</span>
       </div>
     </div>
@@ -155,13 +98,21 @@ function ControlButton({
 function PreviewTile({
   sketch,
   side,
+  direction,
   onClick,
 }: {
   sketch: Sketch;
   side: "left" | "right";
+  direction: number;
   onClick: () => void;
 }) {
   const reduceMotion = useReducedMotion();
+
+  const enterX =
+    side === "left" ? (direction > 0 ? 14 : -14) : direction > 0 ? 16 : -16;
+
+  const exitX =
+    side === "left" ? (direction > 0 ? -10 : 10) : direction > 0 ? -12 : 12;
 
   return (
     <motion.button
@@ -173,41 +124,141 @@ function PreviewTile({
     >
       <div className="w-full max-w-[96px] xl:max-w-[118px]">
         <div className="relative aspect-[0.68/1] overflow-hidden bg-black">
-          <Image
-            src={sketch.image}
-            alt={sketch.title}
-            fill
-            className="object-cover"
-          />
+          <AnimatePresence
+            mode="wait"
+            custom={{ enterX, exitX }}
+            initial={false}
+          >
+            <motion.div
+              key={sketch.id}
+              custom={{ enterX, exitX }}
+              initial={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : {
+                      x: enterX,
+                      opacity: 0,
+                      scale: 0.985,
+                      filter: "blur(1.5px)",
+                    }
+              }
+              animate={{
+                x: 0,
+                opacity: 1,
+                scale: 1,
+                filter: "blur(0px)",
+              }}
+              exit={
+                reduceMotion
+                  ? { opacity: 0 }
+                  : {
+                      x: exitX,
+                      opacity: 0,
+                      scale: 0.985,
+                      filter: "blur(1.5px)",
+                    }
+              }
+              transition={{
+                duration: 0.42,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="absolute inset-0"
+            >
+              <Image
+                src={sketch.image}
+                alt={sketch.title}
+                fill
+                className="object-cover"
+              />
+            </motion.div>
+          </AnimatePresence>
+
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.span
+              key={`preview-accent-${side}-${sketch.id}`}
+              initial={{
+                x: direction > 0 ? "24%" : "-24%",
+                opacity: 0,
+                scaleX: 0.72,
+              }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                scaleX: 1,
+              }}
+              exit={{
+                x: direction > 0 ? "-24%" : "24%",
+                opacity: 0,
+                scaleX: 0.72,
+              }}
+              transition={{
+                duration: 0.44,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="absolute inset-x-0 bottom-0 h-[2px] origin-center bg-[#ff4d12]"
+            />
+          </AnimatePresence>
+
           <div className="absolute inset-0 border border-black/10" />
           <div className="absolute inset-0 bg-black/8 transition-opacity duration-200 hover:opacity-0" />
         </div>
 
-        <p
-          className={`pt-2 text-[11px] leading-[1.3] tracking-[-0.02em] text-black/82 ${
-            side === "right" ? "text-right" : "text-left"
-          }`}
-        >
-          {sketch.artist} — {sketch.title}
-        </p>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.p
+            key={`preview-caption-${side}-${sketch.id}`}
+            initial={{
+              opacity: 0,
+              y: 6,
+              x: direction > 0 ? 8 : -8,
+            }}
+            animate={{ opacity: 1, y: 0, x: 0 }}
+            exit={{
+              opacity: 0,
+              y: -4,
+              x: direction > 0 ? -6 : 6,
+            }}
+            transition={{ duration: 0.26 }}
+            className={`pt-2 text-[11px] leading-[1.3] tracking-[-0.02em] text-black/82 ${
+              side === "right" ? "text-right" : "text-left"
+            }`}
+          >
+            {sketch.artist} — {sketch.title}
+          </motion.p>
+        </AnimatePresence>
       </div>
     </motion.button>
   );
 }
 
-function CounterDigit({
+function StaticDigit({
+  value,
+  className = "",
+}: {
+  value: string;
+  className?: string;
+}) {
+  return (
+    <span
+      className={`inline-flex h-[1.05em] min-w-[1.1ch] items-center justify-center tabular-nums ${className}`}
+    >
+      {value}
+    </span>
+  );
+}
+
+function RollingDigit({
   value,
   direction,
-  muted = false,
+  className = "",
 }: {
-  value: number;
+  value: string;
   direction: number;
-  muted?: boolean;
+  className?: string;
 }) {
   const reduceMotion = useReducedMotion();
 
   return (
-    <span className="relative inline-flex h-[1.05em] min-w-[2.3ch] items-center justify-center overflow-hidden align-middle">
+    <span className="relative inline-flex h-[1.05em] min-w-[1.1ch] items-center justify-center overflow-hidden align-middle">
       <AnimatePresence mode="wait" custom={direction} initial={false}>
         <motion.span
           key={value}
@@ -236,14 +287,12 @@ function CounterDigit({
                 }
           }
           transition={{
-            duration: 0.48,
+            duration: 0.46,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className={`absolute inset-0 flex items-center justify-center tabular-nums ${
-            muted ? "text-black/72" : "text-black/88"
-          }`}
+          className={`absolute inset-0 flex items-center justify-center tabular-nums ${className}`}
         >
-          {formatCounter(value)}
+          {value}
         </motion.span>
       </AnimatePresence>
     </span>
@@ -259,12 +308,27 @@ function ProjectCounter({
   total: number;
   direction: number;
 }) {
+  const currentText = formatCounter(current);
+  const totalText = formatCounter(total);
   const progress = total <= 1 ? 1 : (current - 1) / (total - 1);
+
+  const currentLeft = currentText[0];
+  const currentRight = currentText[1];
+  const totalLeft = totalText[0];
+  const totalRight = totalText[1];
 
   return (
     <div className="flex flex-col items-center gap-3 pb-1">
       <div className="flex items-center gap-4 text-[1.7rem] tracking-[-0.05em] xl:text-[1.9rem]">
-        <CounterDigit value={current} direction={direction} />
+        <span className="inline-flex items-center">
+          <StaticDigit value={currentLeft} className="text-[#ff4d12]" />
+          <RollingDigit
+            value={currentRight}
+            direction={direction}
+            className="text-[#ff4d12]"
+          />
+        </span>
+
         <motion.span
           key={`divider-${current}`}
           initial={{ opacity: 0.3, scaleX: 0.8 }}
@@ -274,7 +338,11 @@ function ProjectCounter({
         >
           —
         </motion.span>
-        <CounterDigit value={total} direction={direction} muted />
+
+        <span className="inline-flex items-center text-black/72">
+          <StaticDigit value={totalLeft} className="text-black/72" />
+          <StaticDigit value={totalRight} className="text-black/72" />
+        </span>
       </div>
 
       <div className="relative h-[2px] w-[170px] overflow-hidden bg-black/10 xl:w-[190px]">
@@ -298,7 +366,7 @@ function ProjectCounter({
       </div>
 
       <p className="text-[9px] uppercase tracking-[0.24em] text-black/34">
-        more
+        Project Index
       </p>
     </div>
   );
@@ -343,6 +411,7 @@ function DesktopStage({
               <PreviewTile
                 sketch={previousSketch}
                 side="left"
+                direction={direction}
                 onClick={onPrev}
               />
 
@@ -454,7 +523,12 @@ function DesktopStage({
                 </div>
               </div>
 
-              <PreviewTile sketch={nextSketch} side="right" onClick={onNext} />
+              <PreviewTile
+                sketch={nextSketch}
+                side="right"
+                direction={direction}
+                onClick={onNext}
+              />
             </div>
 
             <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-end gap-6 border-t border-black/8 pt-6">
@@ -489,7 +563,7 @@ function DesktopStage({
 
                 <div className="mt-5">
                   <Link
-                    href="/contact"
+                    href={`/gallery/${currentSketch.id}`}
                     className="group inline-flex items-stretch"
                   >
                     <motion.span
@@ -539,7 +613,10 @@ function DesktopStage({
                     transition={{ duration: 0.24 }}
                     className="mt-2 text-[11px] uppercase tracking-[0.22em] text-black/34"
                   >
-                    Viewing {formatCounter(currentIndex + 1)}
+                    Viewing{" "}
+                    <span className="text-[#ff4d12]">
+                      {formatCounter(currentIndex + 1)}
+                    </span>
                   </motion.p>
                 </AnimatePresence>
               </div>
@@ -673,7 +750,10 @@ function MobileStage({
           </div>
 
           <div className="mt-5">
-            <Link href="/contact" className="group inline-flex items-stretch">
+            <Link
+              href={`/gallery/${sketch.id}`}
+              className="group inline-flex items-stretch"
+            >
               <motion.span
                 whileHover={{ y: -1 }}
                 transition={{ duration: 0.18 }}
@@ -721,8 +801,17 @@ export default function GalleryPage() {
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "ArrowLeft") goPrev();
-      if (event.key === "ArrowRight") goNext();
+      if (event.key === "ArrowLeft") {
+        setDirection(-1);
+        setCurrentIndex(
+          (prev) => (prev - 1 + sketches.length) % sketches.length,
+        );
+      }
+
+      if (event.key === "ArrowRight") {
+        setDirection(1);
+        setCurrentIndex((prev) => (prev + 1) % sketches.length);
+      }
     }
 
     window.addEventListener("keydown", onKeyDown);

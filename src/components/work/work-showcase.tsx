@@ -45,6 +45,7 @@ type Project = {
   thumb: string;
   alt: string;
   tags: FilterKey[];
+  projectUrl: string;
 };
 
 const filterMenuItems: { key: FilterKey; label: string }[] = [
@@ -60,37 +61,41 @@ const projects: Project[] = [
     id: 1,
     title: "GREENMIND",
     meta: "[MARKETING SITE] — [BRANDING]",
-    image: "/images/work/project-left.jpg",
-    thumb: "/images/work/thumb-1.jpg",
+    image: "/images/work/5.png",
+    thumb: "/images/work/5.png",
     alt: "Greenmind project preview",
     tags: ["Brand", "Marketing"],
+    projectUrl: "https://YOUR-GREENMIND-VERCEL-URL.vercel.app",
   },
   {
     id: 2,
     title: "BODYARMOR",
     meta: "[MARKETING SITE] — [ANIMATIONS]",
-    image: "/images/work/project-center.jpg",
-    thumb: "/images/work/thumb-2.jpg",
+    image: "/images/work/2.png",
+    thumb: "/images/work/2.png",
     alt: "Bodyarmor project preview",
     tags: ["Marketing", "Motion"],
+    projectUrl: "https://YOUR-BODYARMOR-VERCEL-URL.vercel.app",
   },
   {
     id: 3,
     title: "ANNIMATE",
     meta: "[WEB EXPERIENCE] — [SPORTS]",
-    image: "/images/work/project-right.jpg",
-    thumb: "/images/work/thumb-3.jpg",
+    image: "/images/work/3.png",
+    thumb: "/images/work/3.png",
     alt: "Annimate project preview",
     tags: ["Motion", "Portfolio"],
+    projectUrl: "https://YOUR-ANNIMATE-VERCEL-URL.vercel.app",
   },
   {
     id: 4,
     title: "WKNDHRS",
     meta: "[PORTFOLIO] — [ANIMATIONS]",
-    image: "/images/work/project-center.jpg",
-    thumb: "/images/work/thumb-4.jpg",
+    image: "/images/work/4.png",
+    thumb: "/images/work/4.png",
     alt: "Weekend Hours project preview",
     tags: ["Portfolio", "Motion"],
+    projectUrl: "https://YOUR-WKNDHRS-VERCEL-URL.vercel.app",
   },
 ];
 
@@ -464,6 +469,11 @@ export function WorkShowcase() {
   const [viewMode, setViewMode] = useState<ViewMode>("featured");
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
+  const openProject = useCallback((project: Project) => {
+    if (!project.projectUrl) return;
+    window.location.href = project.projectUrl;
+  }, []);
+
   const rootRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
   const controlsRef = useRef<HTMLDivElement | null>(null);
@@ -506,8 +516,6 @@ export function WorkShowcase() {
 
   const safeActiveIndex =
     baseCount === 0 ? 0 : Math.min(activeIndex, baseCount - 1);
-
-  const activeProject = filteredProjects[safeActiveIndex] ?? null;
   const gridRemainder = filteredProjects.length % 3;
   const showGridAmbientFill = viewMode === "grid" && gridRemainder !== 0;
   const gridAmbientSpan = gridRemainder === 1 ? 2 : 1;
@@ -1112,11 +1120,55 @@ export function WorkShowcase() {
                 })}
               </div>
 
-              <motion.span
-                key={activeProject?.id}
-                layout
-                className="mt-1 block h-[10px] w-[10px] bg-[#ff5a1f] lg:mt-2"
-              />
+              <div className="mt-1 flex justify-center lg:mt-2">
+                <Link
+                  href="/gallery"
+                  aria-label="Open gallery"
+                  className="group relative inline-flex h-[18px] w-[18px] items-center justify-center"
+                >
+                  <motion.span
+                    animate={{
+                      y: [0, -1.5, 0],
+                      rotate: [0, 3, 0],
+                      scale: [1, 1.04, 1],
+                    }}
+                    transition={{
+                      duration: 4.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    whileHover={{
+                      scale: 1.08,
+                      rotate: 0,
+                    }}
+                    whileTap={{ scale: 0.94 }}
+                    className="absolute inset-0 bg-[#ff5a1f]"
+                  />
+
+                  <motion.span
+                    animate={{
+                      opacity: [0.28, 0.72, 0.28],
+                    }}
+                    transition={{
+                      duration: 2.8,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="absolute inset-0 border border-black/20"
+                  />
+
+                  <span className="absolute left-1/2 top-1/2 h-[6px] w-[6px] -translate-x-1/2 -translate-y-1/2 border border-black/38 bg-transparent" />
+
+                  <motion.span
+                    initial={{ opacity: 0, y: 5 }}
+                    whileHover={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="pointer-events-none absolute left-1/2 top-[calc(100%+14px)] -translate-x-1/2 whitespace-nowrap text-[10px] uppercase tracking-[0.24em] text-black/46"
+                  >
+                    Gallery
+                  </motion.span>
+                </Link>
+              </div>
             </div>
 
             <div className="flex items-center gap-2 lg:justify-end">
@@ -1208,10 +1260,7 @@ export function WorkShowcase() {
                                 return;
                               }
 
-                              setActiveIndex(baseIndex);
-                              requestAnimationFrame(() => {
-                                scrollToCard(middleOffset + baseIndex);
-                              });
+                              openProject(project);
                             }}
                           />
                         </motion.div>
@@ -1241,6 +1290,7 @@ export function WorkShowcase() {
                         widthClass="w-full"
                         heightClass={CARD_MEDIA_HEIGHT}
                         coarsePointer={isCoarsePointer}
+                        onClick={() => openProject(project)}
                       />
                     </div>
                   ))}
@@ -1267,6 +1317,7 @@ export function WorkShowcase() {
                         widthClass="w-full"
                         heightClass={CARD_MEDIA_HEIGHT}
                         coarsePointer={isCoarsePointer}
+                        onClick={() => openProject(project)}
                       />
                     </div>
                   ))}

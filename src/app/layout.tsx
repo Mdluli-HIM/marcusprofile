@@ -1,25 +1,11 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Inter } from "next/font/google";
-import { PageTransitionProvider } from "@/components/layout/page-transition";
 import "./globals.css";
-
-
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const bebas = Bebas_Neue({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-display",
-});
+import InitialLoader from "@/components/motion/initial-loader";
+import { PageTransitionProvider } from "@/components/layout/page-transition";
 
 export const metadata: Metadata = {
-  title: "Marcus Mdluli | Frontend Developer",
-  description:
-    "Creative frontend developer portfolio built with Next.js, TypeScript, GSAP, and Framer Motion.",
+  title: "Marcus Mdluli",
+  description: "Frontend developer portfolio",
 };
 
 export default function RootLayout({
@@ -29,8 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${bebas.variable}`}>
-        <PageTransitionProvider>{children}</PageTransitionProvider>
+      <body>
+        <PageTransitionProvider>
+          <InitialLoader>{children}</InitialLoader>
+        </PageTransitionProvider>
       </body>
     </html>
   );
