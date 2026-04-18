@@ -313,6 +313,7 @@ function InteractiveProjectCard({
       data-project-card="true"
       className={`group ${widthClass} shrink-0 cursor-pointer`}
       onClick={onClick}
+      onDragStart={(event) => event.preventDefault()}
     >
       <motion.div
         onMouseMove={handleMove}
@@ -342,8 +343,10 @@ function InteractiveProjectCard({
             src={project.image}
             alt={project.alt}
             fill
-            className="object-cover"
             priority={priority}
+            draggable={false}
+            sizes="(min-width: 1280px) 760px, (min-width: 768px) 76vw, 84vw"
+            className="object-cover"
           />
         </motion.div>
 
@@ -396,7 +399,7 @@ function InteractiveProjectCard({
 }
 
 function GalleryTriggerFill({ span = 1 }: { span?: 1 | 2 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   return (
     <div
@@ -484,7 +487,6 @@ export function WorkShowcase() {
 
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
-  const scrollEndTimeoutRef = useRef<number | null>(null);
   const safeActiveIndexRef = useRef(0);
 
   const isDraggingRef = useRef(false);
@@ -755,62 +757,17 @@ export function WorkShowcase() {
     setActiveIndex(mod(closestLoopIndex, baseCount));
   }
 
-  function resolveSnapTarget(endClientX?: number) {
-    normalizeInfinitePosition();
-
-    const closestLoopIndex = getClosestLoopIndex();
-    if (closestLoopIndex === null || baseCount === 0) return;
-
-    let nextBaseIndex = mod(closestLoopIndex, baseCount);
-
-    if (
-      isCoarsePointer &&
-      typeof endClientX === "number" &&
-      dragMovedRef.current
-    ) {
-      const dx = endClientX - dragStartXRef.current;
-      const dt = Math.max(performance.now() - dragStartAtRef.current, 1);
-      const velocity = Math.abs(dx) / dt;
-
-      if (Math.abs(dx) > 42 || velocity > 0.32) {
-        nextBaseIndex =
-          dx < 0
-            ? mod(nextBaseIndex + 1, baseCount)
-            : mod(nextBaseIndex - 1, baseCount);
-      }
-    }
-
-    setActiveIndex(nextBaseIndex);
-    scrollToCard(middleOffset + nextBaseIndex);
-  }
-
-  function scheduleSnapToMiddleBand(endClientX?: number) {
-    if (scrollEndTimeoutRef.current) {
-      window.clearTimeout(scrollEndTimeoutRef.current);
-    }
-
-    scrollEndTimeoutRef.current = window.setTimeout(
-      () => {
-        resolveSnapTarget(endClientX);
-      },
-      isCoarsePointer ? 40 : 110,
-    );
-  }
-
   function handleScroll() {
     if (viewMode !== "featured" || baseCount === 0) return;
 
-    normalizeInfinitePosition();
-
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
 
     rafRef.current = requestAnimationFrame(() => {
+      normalizeInfinitePosition();
       updateClosestCard();
     });
-
-    if (!isDraggingRef.current) {
-      scheduleSnapToMiddleBand();
-    }
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
@@ -837,20 +794,24 @@ export function WorkShowcase() {
     }
 
     const dx = event.clientX - dragStartXRef.current;
+
     if (Math.abs(dx) > 4) {
       dragMovedRef.current = true;
     }
 
     scrollerRef.current.scrollLeft = dragStartScrollLeftRef.current - dx;
 
-    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+    }
+
     rafRef.current = requestAnimationFrame(() => {
       normalizeInfinitePosition();
       updateClosestCard();
     });
   }
 
-  function endPointerDrag(pointerId?: number, endClientX?: number) {
+  function endPointerDrag(pointerId?: number) {
     if (!isDraggingRef.current || !scrollerRef.current) return;
 
     if (pointerId !== undefined && dragPointerIdRef.current === pointerId) {
@@ -864,15 +825,16 @@ export function WorkShowcase() {
     isDraggingRef.current = false;
     dragPointerIdRef.current = null;
 
-    scheduleSnapToMiddleBand(endClientX);
+    normalizeInfinitePosition();
+    updateClosestCard();
   }
 
   function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
-    endPointerDrag(event.pointerId, event.clientX);
+    endPointerDrag(event.pointerId);
   }
 
   function handlePointerCancel(event: React.PointerEvent<HTMLDivElement>) {
-    endPointerDrag(event.pointerId, event.clientX);
+    endPointerDrag(event.pointerId);
   }
 
   function setFilter(filter: FilterKey) {
@@ -887,43 +849,33 @@ export function WorkShowcase() {
     setFilterOpen(false);
   }
 
-  function goPrev() {
+  function scrollByOneCard(direction: 1 | -1) {
     if (!baseCount) return;
 
-    setActiveIndex((prev) => {
-      const next = prev === 0 ? baseCount - 1 : prev - 1;
+    normalizeInfinitePosition();
 
-      if (viewMode === "featured") {
-        requestAnimationFrame(() => {
-          scrollToCard(middleOffset + next);
-        });
-      }
+    const closestLoopIndex = getClosestLoopIndex();
+    if (closestLoopIndex === null) return;
 
-      return next;
-    });
+    const targetLoopIndex = closestLoopIndex + direction;
+    const nextBaseIndex = mod(targetLoopIndex, baseCount);
+
+    setActiveIndex(nextBaseIndex);
+    scrollToCard(targetLoopIndex, "smooth");
+  }
+
+  function goPrev() {
+    scrollByOneCard(-1);
   }
 
   function goNext() {
-    if (!baseCount) return;
-
-    setActiveIndex((prev) => {
-      const next = prev === baseCount - 1 ? 0 : prev + 1;
-
-      if (viewMode === "featured") {
-        requestAnimationFrame(() => {
-          scrollToCard(middleOffset + next);
-        });
-      }
-
-      return next;
-    });
+    scrollByOneCard(1);
   }
 
   useEffect(() => {
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (scrollEndTimeoutRef.current) {
-        window.clearTimeout(scrollEndTimeoutRef.current);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
       }
     };
   }, []);
@@ -1026,8 +978,16 @@ export function WorkShowcase() {
                       y: 10,
                       clipPath: "inset(0 0 100% 0)",
                     }}
-                    animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
-                    exit={{ opacity: 0, y: 8, clipPath: "inset(0 0 100% 0)" }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      clipPath: "inset(0 0 0% 0)",
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: 8,
+                      clipPath: "inset(0 0 100% 0)",
+                    }}
                     transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute left-0 top-[calc(100%+6px)] z-[120] w-[174px] bg-black px-5 py-5 shadow-[0_18px_40px_rgba(0,0,0,0.18)]"
                   >
@@ -1051,7 +1011,7 @@ export function WorkShowcase() {
                             transition={{ duration: 0.18 }}
                             className="group relative flex items-center pl-5 text-left"
                           >
-                            {showIndicator && (
+                            {showIndicator ? (
                               <motion.span
                                 layoutId="filter-active-indicator"
                                 className="absolute left-0 top-1/2 h-[8px] w-[8px] -translate-y-1/2 bg-[#ff5a1f]"
@@ -1062,7 +1022,7 @@ export function WorkShowcase() {
                                   mass: 0.7,
                                 }}
                               />
-                            )}
+                            ) : null}
 
                             <motion.span
                               animate={{
@@ -1096,9 +1056,10 @@ export function WorkShowcase() {
                       type="button"
                       onClick={() => {
                         setActiveIndex(index);
+
                         if (viewMode === "featured") {
                           requestAnimationFrame(() => {
-                            scrollToCard(middleOffset + index);
+                            scrollToCard(middleOffset + index, "smooth");
                           });
                         }
                       }}
@@ -1113,6 +1074,7 @@ export function WorkShowcase() {
                         src={project.thumb}
                         alt={project.title}
                         fill
+                        sizes="86px"
                         className="object-cover"
                       />
                     </button>
@@ -1206,7 +1168,7 @@ export function WorkShowcase() {
             </div>
           </div>
 
-          {isCoarsePointer && viewMode === "featured" && (
+          {isCoarsePointer && viewMode === "featured" ? (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1216,7 +1178,7 @@ export function WorkShowcase() {
               <span className="h-[8px] w-[8px] rotate-45 bg-[#ff5a1f]" />
               Swipe horizontally to move one project at a time
             </motion.div>
-          )}
+          ) : null}
 
           <div ref={layoutRef} className="relative z-0">
             <AnimatePresence mode="wait">
@@ -1227,14 +1189,13 @@ export function WorkShowcase() {
                   initial="hidden"
                   animate="show"
                   exit="exit"
-                  className="mt-8 overflow-x-auto select-none touch-pan-y [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                   ref={scrollerRef}
                   onScroll={handleScroll}
                   onPointerDown={handlePointerDown}
                   onPointerMove={handlePointerMove}
                   onPointerUp={handlePointerUp}
                   onPointerCancel={handlePointerCancel}
-                  onPointerLeave={handlePointerUp}
+                  className="mt-8 overflow-x-auto overflow-y-hidden select-none touch-pan-y cursor-grab active:cursor-grabbing [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
                 >
                   <div className="flex min-w-max gap-3 px-[6vw] pb-3 sm:gap-4 sm:px-[4vw]">
                     {loopedProjects.map((project, loopIndex) => {
@@ -1321,9 +1282,9 @@ export function WorkShowcase() {
                       />
                     </div>
                   ))}
-                  {showGridAmbientFill && (
+                  {showGridAmbientFill ? (
                     <GalleryTriggerFill span={gridAmbientSpan as 1 | 2} />
-                  )}
+                  ) : null}
                 </motion.div>
               ) : null}
             </AnimatePresence>

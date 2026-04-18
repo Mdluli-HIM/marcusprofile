@@ -78,7 +78,7 @@ function ControlButton({
   label: string;
   children: React.ReactNode;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   return (
     <motion.button
@@ -106,7 +106,7 @@ function PreviewTile({
   direction: number;
   onClick: () => void;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   const enterX =
     side === "left" ? (direction > 0 ? 14 : -14) : direction > 0 ? 16 : -16;
@@ -255,7 +255,7 @@ function RollingDigit({
   direction: number;
   className?: string;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   return (
     <span className="relative inline-flex h-[1.05em] min-w-[1.1ch] items-center justify-center overflow-hidden align-middle">
@@ -391,7 +391,7 @@ function DesktopStage({
   onPrev: () => void;
   onNext: () => void;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   return (
     <div className="hidden min-h-0 flex-1 lg:block">

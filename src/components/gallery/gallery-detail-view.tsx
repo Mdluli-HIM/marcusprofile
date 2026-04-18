@@ -111,7 +111,7 @@ function MediaFrame({
   priority?: boolean;
   dark?: boolean;
 }) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
 
   const asset = media ?? {
     kind: "image" as const,
@@ -288,7 +288,8 @@ function MuseumFrameDetail({
             className="hidden xl:flex justify-center pt-2"
           >
             <div className="[writing-mode:vertical-rl] text-[11px] uppercase leading-[1.9] tracking-[0.24em] text-black/54">
-              {sketch.medium} / UI / UX / Motion / Layout / Frontend / Visual Intent
+              {sketch.medium} / UI / UX / Motion / Layout / Frontend / Visual
+              Intent
             </div>
           </motion.div>
 
@@ -396,7 +397,12 @@ function DefaultDetail({
 }) {
   return (
     <div className="overflow-x-hidden px-6 py-8 sm:px-8 lg:grid lg:grid-cols-[minmax(0,1.15fr)_420px] lg:gap-10 lg:px-10 xl:grid-cols-[minmax(0,1.2fr)_460px] xl:gap-14 xl:px-12">
-      <motion.div variants={fadeUp} initial="hidden" animate="show" className="min-w-0">
+      <motion.div
+        variants={fadeUp}
+        initial="hidden"
+        animate="show"
+        className="min-w-0"
+      >
         <MediaFrame
           fallbackImage={sketch.image}
           fallbackAlt={sketch.title}
@@ -418,7 +424,8 @@ function DefaultDetail({
           </p>
           <span className="h-[4px] w-[4px] bg-[#ff4d12]" />
           <p className="text-[12px] uppercase tracking-[0.18em] text-black/54">
-            {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(total).padStart(2, "0")}
           </p>
         </div>
       </motion.div>

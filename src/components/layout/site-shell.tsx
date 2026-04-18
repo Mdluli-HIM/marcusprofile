@@ -14,7 +14,7 @@ export function SiteShell({ children, home = false }: SiteShellProps) {
         className={
           home
             ? "min-h-screen pb-24 lg:pb-0 lg:pl-[72px]"
-            : "min-h-screen bg-[#f2f2ef] pb-24 text-black lg:pb-0 lg:pl-[72px]"
+            : "min-h-screen bg-[white pb-24 text-black lg:pb-0 lg:pl-[72px]"
         }
       >
         {children}

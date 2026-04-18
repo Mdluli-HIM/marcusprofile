@@ -15,7 +15,7 @@ function easeInOutQuint(t: number) {
 }
 
 export default function InitialLoader({ children }: InitialLoaderProps) {
-  const reduceMotion = useReducedMotion();
+  const reduceMotion = useReducedMotion() ?? false;
   const [isActive, setIsActive] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [progress, setProgress] = useState(0);

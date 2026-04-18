@@ -147,7 +147,7 @@ export default function ContactPage() {
 
   return (
     <SiteShell>
-      <section className="min-h-screen bg-[#f2f2ef] px-5 py-8 md:px-8 md:py-10 xl:px-12">
+      <section className="min-h-screen bg-[white px-5 py-8 md:px-8 md:py-10 xl:px-12">
         <div className="mx-auto max-w-[1560px]">
           <div className="grid gap-8 md:gap-10 xl:grid-cols-[0.92fr_0.58fr_1.04fr] xl:items-start">
             <motion.div
@@ -251,7 +251,10 @@ export default function ContactPage() {
                   Send a message
                 </h2>
 
-                <form onSubmit={handleSubmit} className="mt-10 space-y-10 md:mt-14 md:space-y-14">
+                <form
+                  onSubmit={handleSubmit}
+                  className="mt-10 space-y-10 md:mt-14 md:space-y-14"
+                >
                   <div className="grid gap-x-8 gap-y-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12">
                     <Field
                       label="First Name*"
