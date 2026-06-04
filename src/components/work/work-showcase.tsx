@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 import {
   useCallback,
@@ -27,77 +28,21 @@ import {
   Grid2x2,
   LayoutGrid,
 } from "lucide-react";
+
 import gsap from "gsap";
 import { Flip, SplitText } from "gsap/all";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import {
+  projects,
+  filterMenuItems,
+  type FilterKey,
+  type WorkProject as Project,
+} from "@/data/work-projects";
 
 gsap.registerPlugin(Flip, SplitText, useGSAP);
 
-type FilterKey = "All" | "Brand" | "Marketing" | "Motion" | "Portfolio";
 type ViewMode = "featured" | "split" | "grid";
-
-type Project = {
-  id: number;
-  title: string;
-  meta: string;
-  image: string;
-  thumb: string;
-  alt: string;
-  tags: FilterKey[];
-  projectUrl: string;
-};
-
-const filterMenuItems: { key: FilterKey; label: string }[] = [
-  { key: "All", label: "[ALL]" },
-  { key: "Brand", label: "[AGENCY WEBSITE]" },
-  { key: "Motion", label: "[ANIMATIONS]" },
-  { key: "Marketing", label: "[MARKETING SITE]" },
-  { key: "Portfolio", label: "[PORTFOLIO]" },
-];
-
-const projects: Project[] = [
-  {
-    id: 1,
-    title: "GREENMIND",
-    meta: "[MARKETING SITE] — [BRANDING]",
-    image: "/images/work/5.png",
-    thumb: "/images/work/5.png",
-    alt: "Greenmind project preview",
-    tags: ["Brand", "Marketing"],
-    projectUrl: "https://YOUR-GREENMIND-VERCEL-URL.vercel.app",
-  },
-  {
-    id: 2,
-    title: "BODYARMOR",
-    meta: "[MARKETING SITE] — [ANIMATIONS]",
-    image: "/images/work/2.png",
-    thumb: "/images/work/2.png",
-    alt: "Bodyarmor project preview",
-    tags: ["Marketing", "Motion"],
-    projectUrl: "https://YOUR-BODYARMOR-VERCEL-URL.vercel.app",
-  },
-  {
-    id: 3,
-    title: "ANNIMATE",
-    meta: "[WEB EXPERIENCE] — [SPORTS]",
-    image: "/images/work/3.png",
-    thumb: "/images/work/3.png",
-    alt: "Annimate project preview",
-    tags: ["Motion", "Portfolio"],
-    projectUrl: "https://YOUR-ANNIMATE-VERCEL-URL.vercel.app",
-  },
-  {
-    id: 4,
-    title: "WKNDHRS",
-    meta: "[PORTFOLIO] — [ANIMATIONS]",
-    image: "/images/work/4.png",
-    thumb: "/images/work/4.png",
-    alt: "Weekend Hours project preview",
-    tags: ["Portfolio", "Motion"],
-    projectUrl: "https://YOUR-WKNDHRS-VERCEL-URL.vercel.app",
-  },
-];
 
 const panelEase = [0.22, 1, 0.36, 1] as const;
 const exitEase = [0.4, 0, 1, 1] as const;
@@ -311,6 +256,8 @@ function InteractiveProjectCard({
   return (
     <motion.article
       data-project-card="true"
+      data-project-id={project.id}
+      data-project-slug={project.slug}
       className={`group ${widthClass} shrink-0 cursor-pointer`}
       onClick={onClick}
       onDragStart={(event) => event.preventDefault()}
@@ -369,11 +316,20 @@ function InteractiveProjectCard({
               scale: hovered ? 1 : 0.96,
             }}
             transition={{ duration: 0.18, ease: "easeOut" }}
-            className="pointer-events-none absolute left-0 top-0 z-20 -translate-x-1/2 -translate-y-1/2"
+            className="absolute left-0 top-0 z-20 -translate-x-1/2 -translate-y-1/2"
           >
-            <div className="bg-[#ff4d12] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-black shadow-[0_10px_30px_rgba(0,0,0,0.14)]">
+            <button
+              type="button"
+              onClick={(event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                onClick?.();
+              }}
+              aria-label={`View ${project.title} project`}
+              className="pointer-events-auto bg-[#ff4d12] px-4 py-2 text-[11px] uppercase tracking-[0.12em] text-black shadow-[0_10px_30px_rgba(0,0,0,0.14)] transition hover:opacity-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/50"
+            >
               View Project
-            </div>
+            </button>
           </motion.div>
         )}
 
@@ -462,6 +418,7 @@ function GalleryTriggerFill({ span = 1 }: { span?: 1 | 2 }) {
 }
 
 export function WorkShowcase() {
+  const router = useRouter();
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHovered, setFilterHovered] = useState(false);
   const [hoveredFilterKey, setHoveredFilterKey] = useState<FilterKey | null>(
@@ -472,10 +429,12 @@ export function WorkShowcase() {
   const [viewMode, setViewMode] = useState<ViewMode>("featured");
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
-  const openProject = useCallback((project: Project) => {
-    if (!project.projectUrl) return;
-    window.location.href = project.projectUrl;
-  }, []);
+  const openProject = useCallback(
+    (project: Project) => {
+      router.push(`/work/${project.slug}`);
+    },
+    [router],
+  );
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const titleRef = useRef<HTMLHeadingElement | null>(null);
@@ -496,6 +455,8 @@ export function WorkShowcase() {
   const dragStartScrollLeftRef = useRef(0);
   const dragMovedRef = useRef(false);
   const lastDragAtRef = useRef(0);
+  const pointerDownProjectSlugRef = useRef<string | null>(null);
+  const hasPointerCaptureRef = useRef(false);
 
   const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
 
@@ -779,8 +740,16 @@ export function WorkShowcase() {
     dragStartAtRef.current = performance.now();
     dragStartScrollLeftRef.current = scrollerRef.current.scrollLeft;
     dragMovedRef.current = false;
+    hasPointerCaptureRef.current = false;
 
-    scrollerRef.current.setPointerCapture(event.pointerId);
+    const projectCard = (event.target as HTMLElement | null)?.closest?.(
+      '[data-project-card="true"]',
+    ) as HTMLElement | null;
+    pointerDownProjectSlugRef.current =
+      projectCard?.dataset?.projectSlug ?? null;
+
+    // Only capture the pointer once the user is actually dragging.
+    // Capturing immediately prevents inner elements (buttons/links) from receiving click events.
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
@@ -797,6 +766,11 @@ export function WorkShowcase() {
 
     if (Math.abs(dx) > 4) {
       dragMovedRef.current = true;
+
+      if (!hasPointerCaptureRef.current) {
+        scrollerRef.current.setPointerCapture(event.pointerId);
+        hasPointerCaptureRef.current = true;
+      }
     }
 
     scrollerRef.current.scrollLeft = dragStartScrollLeftRef.current - dx;
@@ -814,7 +788,11 @@ export function WorkShowcase() {
   function endPointerDrag(pointerId?: number) {
     if (!isDraggingRef.current || !scrollerRef.current) return;
 
-    if (pointerId !== undefined && dragPointerIdRef.current === pointerId) {
+    if (
+      pointerId !== undefined &&
+      dragPointerIdRef.current === pointerId &&
+      hasPointerCaptureRef.current
+    ) {
       scrollerRef.current.releasePointerCapture(pointerId);
     }
 
@@ -824,6 +802,7 @@ export function WorkShowcase() {
 
     isDraggingRef.current = false;
     dragPointerIdRef.current = null;
+    hasPointerCaptureRef.current = false;
 
     normalizeInfinitePosition();
     updateClosestCard();
@@ -831,10 +810,25 @@ export function WorkShowcase() {
 
   function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
     endPointerDrag(event.pointerId);
+
+    if (dragMovedRef.current) {
+      pointerDownProjectSlugRef.current = null;
+      return;
+    }
+
+    const slug = pointerDownProjectSlugRef.current;
+    pointerDownProjectSlugRef.current = null;
+    if (!slug) return;
+
+    const tappedProject = projects.find((project) => project.slug === slug);
+    if (!tappedProject) return;
+
+    openProject(tappedProject);
   }
 
   function handlePointerCancel(event: React.PointerEvent<HTMLDivElement>) {
     endPointerDrag(event.pointerId);
+    pointerDownProjectSlugRef.current = null;
   }
 
   function setFilter(filter: FilterKey) {

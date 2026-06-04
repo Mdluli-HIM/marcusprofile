@@ -2,319 +2,134 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion, useReducedMotion } from "framer-motion";
-import { SideNav } from "@/components/layout/side-nav";
-import AboutExperienceScroll, {
-  type AboutExperienceItem,
-} from "@/components/about/about-experience-scroll";
-import AboutPrinciplesScroll from "@/components/about/about-principles-scroll";
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import { SiteShell } from "@/components/layout/site-shell";
 
-type FloatingCardConfig = {
-  src: string;
-  alt: string;
-  className: string;
-  x: number[];
-  y: number[];
-  rotate: number[];
-  duration: number;
-};
-
-const heroMedia = "/images/work/2.png";
-
-const experiences: AboutExperienceItem[] = [
-  {
-    id: "independent",
-    title: "Independent",
-    period: "2020 — Now",
-    blurb:
-      "Frontend developer working across self-initiated concepts, product interfaces, and visual systems with a strong focus on clarity, motion, and structure.",
-    images: [
-      "/images/work/5.png",
-      "/images/work/3.png",
-      "/images/work/4.png",
-      "/images/work/2.png",
-      "/images/work/5.png",
-      "/images/work/3.png",
-    ],
-  },
-  {
-    id: "landscope",
-    title: "Landscope",
-    period: "2025",
-    blurb:
-      "A collaborative workspace concept for professionals in the built environment, focused on structure, workflow visibility, and premium interface rhythm.",
-    images: [
-      "/images/work/2.png",
-      "/images/work/5.png",
-      "/images/work/3.png",
-      "/images/work/4.png",
-      "/images/work/2.png",
-      "/images/work/5.png",
-    ],
-  },
-  {
-    id: "mybud",
-    title: "myBUD",
-    period: "2025",
-    blurb:
-      "A cannabis identity and loyalty system designed around membership, customer experience, and a premium digital-meets-physical product feeling.",
-    images: [
-      "/images/work/4.png",
-      "/images/work/3.png",
-      "/images/work/2.png",
-      "/images/work/5.png",
-      "/images/work/4.png",
-      "/images/work/3.png",
-    ],
-  },
-  {
-    id: "house-of-jireh",
-    title: "House of Jireh",
-    period: "2025",
-    blurb:
-      "A nonprofit-focused web direction exploring warmth, trust, readability, and meaningful calls to action through a restrained visual system.",
-    images: [
-      "/images/work/5.png",
-      "/images/work/2.png",
-      "/images/work/4.png",
-      "/images/work/3.png",
-      "/images/work/5.png",
-      "/images/work/2.png",
-    ],
-  },
-];
-
-const floatingCards: FloatingCardConfig[] = [
-  {
-    src: "/images/work/5.png",
-    alt: "Phone concept on orange fabric",
-    className: "left-[14%] top-[12%] w-[160px] sm:w-[180px]",
-    x: [-26, -8, 12, 28, 12, -8, -26],
-    y: [0, -4, 2, 0, -2, 2, 0],
-    rotate: [-1.2, -0.6, 0.2, 0.8, 0.2, -0.4, -1],
-    duration: 11,
-  },
-  {
-    src: "/images/work/2.png",
-    alt: "Laptop concept preview",
-    className: "left-[24%] top-[24%] w-[126px] sm:w-[144px]",
-    x: [-20, -6, 10, 22, 10, -6, -20],
-    y: [0, 3, -2, 0, 2, -1, 0],
-    rotate: [1, 0.4, -0.2, -0.6, -0.1, 0.4, 0.8],
-    duration: 10.5,
-  },
-  {
-    src: "/images/work/3.png",
-    alt: "Mobile editorial preview",
-    className: "left-[50%] top-[11%] w-[146px] sm:w-[164px]",
-    x: [-18, -4, 14, 24, 14, -4, -18],
-    y: [0, -3, 2, 0, -2, 2, 0],
-    rotate: [-1, -0.3, 0.2, 0.6, 0.2, -0.3, -0.8],
-    duration: 12.5,
-  },
-  {
-    src: "/images/work/4.png",
-    alt: "App interface preview",
-    className: "right-[18%] top-[15%] w-[124px] sm:w-[142px]",
-    x: [-24, -10, 8, 20, 8, -10, -24],
-    y: [0, 2, -2, 0, 2, -1, 0],
-    rotate: [0.9, 0.3, -0.2, -0.5, -0.1, 0.2, 0.7],
-    duration: 10.8,
-  },
-  {
-    src: "/images/work/3.png",
-    alt: "Floating phone preview",
-    className: "right-[8%] top-[21%] w-[122px] sm:w-[140px]",
-    x: [-18, -6, 10, 24, 10, -6, -18],
-    y: [0, -3, 2, 0, -2, 1, 0],
-    rotate: [-0.8, -0.2, 0.3, 0.7, 0.2, -0.3, -0.6],
-    duration: 11.8,
-  },
-  {
-    src: "/images/work/4.png",
-    alt: "Artwork preview",
-    className: "right-[20%] bottom-[18%] w-[124px] sm:w-[142px]",
-    x: [-22, -8, 10, 22, 10, -8, -22],
-    y: [0, 3, -2, 0, 2, -1, 0],
-    rotate: [0.8, 0.2, -0.2, -0.5, -0.1, 0.3, 0.6],
-    duration: 12.2,
-  },
-  {
-    src: "/images/work/2.png",
-    alt: "Phone interface preview",
-    className: "left-[10%] bottom-[15%] w-[118px] sm:w-[134px]",
-    x: [-24, -10, 8, 20, 8, -10, -24],
-    y: [0, -3, 2, 0, -2, 2, 0],
-    rotate: [-1, -0.3, 0.2, 0.5, 0.1, -0.3, -0.8],
-    duration: 10.9,
-  },
-  {
-    src: "/images/work/5.png",
-    alt: "Phone concept repeat preview",
-    className: "right-[6%] bottom-[9%] w-[134px] sm:w-[152px]",
-    x: [-20, -6, 12, 24, 12, -6, -20],
-    y: [0, 2, -2, 0, 2, -1, 0],
-    rotate: [0.9, 0.2, -0.2, -0.6, -0.1, 0.3, 0.6],
-    duration: 12.9,
-  },
-];
-
-function FloatingCard({
-  card,
-  index,
-  reduceMotion,
-}: {
-  card: FloatingCardConfig;
-  index: number;
-  reduceMotion: boolean;
-}) {
-  return (
-    <motion.div
-      initial={{
-        opacity: 1,
-        x: card.x[0],
-        y: card.y[0],
-        rotate: card.rotate[0],
-      }}
-      animate={
-        reduceMotion
-          ? { opacity: 1, x: 0, y: 0, rotate: 0 }
-          : {
-              opacity: 1,
-              x: card.x,
-              y: card.y,
-              rotate: card.rotate,
-            }
-      }
-      transition={{
-        duration: card.duration,
-        delay: index * 0.12,
-        repeat: Infinity,
-        ease: "easeInOut",
-        times: reduceMotion ? undefined : [0, 0.18, 0.38, 0.62, 0.78, 0.9, 1],
-      }}
-      className={`absolute hidden md:block will-change-transform ${card.className}`}
-    >
-      <div className="relative aspect-[1.12/0.72] overflow-hidden rounded-[2px] bg-[#e7e1d8] shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
-        <Image
-          src={card.src}
-          alt={card.alt}
-          fill
-          sizes="200px"
-          className="object-cover"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-function SideBySideSection() {
-  const reduceMotion = useReducedMotion() ?? false;
-
-  return (
-    <section className="relative overflow-hidden border-t border-black/8 px-6 py-32 md:px-8 lg:px-10 xl:px-12">
-      <div className="mx-auto max-w-[1600px]">
-        <div className="relative min-h-[680px]">
-          {floatingCards.map((card, index) => (
-            <FloatingCard
-              key={`${card.src}-${index}`}
-              card={card}
-              index={index}
-              reduceMotion={reduceMotion}
-            />
-          ))}
-
-          <div className="relative z-10 flex min-h-[680px] items-center justify-center">
-            <div className="text-center">
-              <h2 className="mx-auto max-w-[760px] text-[clamp(3rem,6vw,5.4rem)] font-light leading-[0.99] tracking-[-0.08em] text-black">
-                Crafting products
-                <br />
-                side by side
-              </h2>
-
-              <Link
-                href="/contact"
-                className="mt-10 inline-flex items-center justify-center rounded-full bg-black px-8 py-4 text-[15px] font-medium leading-none tracking-[-0.02em] text-white shadow-[0_10px_24px_rgba(0,0,0,0.08)] transition hover:bg-[#ff4d12] hover:text-black"
-              >
-                <span className="whitespace-nowrap text-white">Get quote</span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
+const ABOUT_PORTRAIT = "/images/profile/profile-main.jpg";
 
 export default function AboutPage() {
-  const reduceMotion = useReducedMotion() ?? false;
-
   return (
-    <>
-      <SideNav />
-
-      <main className="min-h-screen overflow-x-hidden bg-white text-black lg:pl-[72px]">
-        <section className="px-6 pb-18 pt-16 md:px-8 md:pt-20 lg:px-10 lg:pb-22 lg:pt-24 xl:px-12 xl:pt-28">
-          <div className="mx-auto max-w-[1680px]">
-            <div className="max-w-[1040px]">
-              <motion.h1
-                initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.55 }}
-                className="text-[clamp(3.25rem,7vw,5.35rem)] font-light leading-[0.95] tracking-[-0.082em] text-black"
+    <SiteShell>
+      <div className="min-h-screen overflow-x-hidden bg-[#f3f0ea] text-black">
+        <section className="px-6 py-8 sm:px-8 lg:px-12 xl:px-16">
+          <div className="mx-auto max-w-[1600px]">
+            <div className="grid gap-10 lg:grid-cols-[minmax(320px,0.9fr)_minmax(420px,0.85fr)] lg:items-start xl:gap-16">
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                className="relative"
               >
-                Marcus Mdluli
-              </motion.h1>
+                <div className="relative overflow-hidden border border-black/8 bg-black">
+                  <div className="relative aspect-[0.84/1]">
+                    <Image
+                      src={ABOUT_PORTRAIT}
+                      alt="Marcus Mdluli portrait"
+                      fill
+                      priority
+                      sizes="(min-width: 1280px) 42vw, (min-width: 1024px) 48vw, 100vw"
+                      className="object-cover grayscale"
+                    />
+                  </div>
+                </div>
 
-              <motion.h2
-                initial={reduceMotion ? false : { opacity: 0, y: 22 }}
-                animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.55, delay: 0.08 }}
-                className="mt-2 max-w-[1120px] text-[clamp(3rem,6.1vw,5.15rem)] font-light leading-[0.98] tracking-[-0.082em] text-black/18"
+                <div className="mt-4 inline-flex items-center bg-[#ff4d12] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.16em] text-white">
+                  Frontend / Motion / UI Systems
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="max-w-[760px]"
               >
-                Designing digital products to feel clear, purposeful, and
-                memorable.
-              </motion.h2>
-            </div>
-          </div>
+                <h1 className="max-w-[10ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
+                  Frontend systems that feel clear, sharp, and memorable.
+                </h1>
 
-          <motion.div
-            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, delay: 0.14 }}
-            className="mt-6 sm:mt-8 lg:mt-10"
-          >
-            <div className="relative w-full overflow-hidden bg-[#e7e1d8]">
-              <div className="relative aspect-[3840/1760] min-h-[460px] sm:min-h-[560px] md:min-h-[660px] lg:min-h-[760px] xl:min-h-[840px] 2xl:min-h-[900px]">
-                <Image
-                  src={heroMedia}
-                  alt="About hero"
-                  fill
-                  priority
-                  sizes="100vw"
-                  className="object-cover object-center"
-                />
-              </div>
-            </div>
-          </motion.div>
+                <div className="mt-8 space-y-6 text-[1.02rem] leading-[1.95] text-black/56 xl:text-[1.08rem]">
+                  <p>
+                    I build at the intersection of{" "}
+                    <span className="font-semibold text-black">
+                      visual identity, motion, and frontend structure
+                    </span>
+                    . My work is shaped by typography, rhythm, editorial spacing,
+                    and the small interaction details that make a website feel
+                    intentional from the first second.
+                  </p>
 
-          <div className="mx-auto mt-8 max-w-[1680px]">
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_430px] lg:gap-16 xl:grid-cols-[minmax(0,1fr)_470px]">
-              <div />
-              <p className="max-w-[30ch] text-[17px] leading-[1.72] text-black/72">
-                Frontend developer building premium digital experiences through
-                structure, typography, motion, and quiet attention to detail.
-              </p>
+                  <p>
+                    I care about building interfaces that do more than function. I
+                    want them to feel composed, premium, and easy to remember.
+                    Most of what I make lives between{" "}
+                    <span className="font-semibold text-black">
+                      brand sites, portfolios, gallery-like experiences, and
+                      motion-led UI systems
+                    </span>
+                    .
+                  </p>
+
+                  <p>
+                    Outside of standard web layouts, I also use code as a visual
+                    sketchbook. That means experimenting with interfaces,
+                    compositions, motion studies, and design systems that feel
+                    closer to digital art direction than generic product UI.
+                  </p>
+
+                  <p>
+                    I am based in{" "}
+                    <span className="font-semibold text-black">South Africa</span>{" "}
+                    and focused on frontend work that balances aesthetics with
+                    clean execution.
+                  </p>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  className="mt-10 border border-black/10 bg-white/55 p-6 sm:p-7"
+                >
+                  <div className="flex gap-4">
+                    <div className="w-[3px] shrink-0 bg-[#ff4d12]" />
+
+                    <div className="min-w-0">
+                      <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-black">
+                        Frontend Craft — Motion / UI / Editorial Systems
+                      </h2>
+                      <p className="mt-2 text-[0.98rem] leading-[1.8] text-black/52">
+                        Brand sites, portfolios, landing pages, gallery systems,
+                        interaction design, layout rhythm, and restrained motion
+                        built with design sensitivity and strong frontend
+                        structure.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <div className="mt-10 flex flex-wrap gap-4">
+                  <Link href="/work" className="group inline-flex items-stretch">
+                    <span className="inline-flex h-[56px] items-center bg-[#ff4d12] px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-white transition-transform duration-200 group-hover:-translate-y-[1px]">
+                      View Work
+                    </span>
+                    <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#ff4d12] text-white transition-transform duration-200 group-hover:-translate-y-[1px]">
+                      <ArrowUpRight className="h-5 w-5" />
+                    </span>
+                  </Link>
+
+                  <Link href="/contact" className="group inline-flex items-stretch">
+                    <span className="inline-flex h-[56px] items-center border border-black/12 bg-transparent px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-black transition-colors duration-200 group-hover:bg-black group-hover:text-white">
+                      Contact
+                    </span>
+                  </Link>
+                </div>
+              </motion.div>
             </div>
           </div>
         </section>
-
-        <AboutExperienceScroll items={experiences} />
-
-        <AboutPrinciplesScroll />
-
-        <SideBySideSection />
-      </main>
-    </>
+      </div>
+    </SiteShell>
   );
 }

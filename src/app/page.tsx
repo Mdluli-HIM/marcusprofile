@@ -3,8 +3,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
+
+type StackItem = {
+  name: string;
+  icon: string;
+};
+
+const stackItems: StackItem[] = [
+  { name: "typescript", icon: "/icons/typescript.png" },
+  { name: "JavaScript", icon: "/icons/javascript.png" },
+  { name: "React", icon: "/icons/react.png" },
+  { name: "GSAP", icon: "/icons/gsap.png" },
+  { name: "Figma", icon: "/icons/figma.png" },
+  { name: "MongoDB", icon: "/icons/mongodb.png" },
+  { name: "Node", icon: "/icons/node.png" },
+];
 
 function PrimaryButton({
   href,
@@ -22,12 +36,12 @@ function PrimaryButton({
       >
         <span>{children}</span>
         <motion.span
-          className="ml-3 inline-flex"
+          className="ml-3 inline-flex text-[16px]"
           initial={false}
           whileHover={{ x: 4 }}
           transition={{ duration: 0.18 }}
         >
-          <ArrowRight size={16} strokeWidth={2.2} />
+          →
         </motion.span>
       </motion.span>
     </Link>
@@ -114,11 +128,13 @@ function AnimatedPortraitPanel() {
       <motion.div
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.55, delay: 0.55, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute bottom-6 left-6 border border-white/10 bg-[#ff4d12] px-5 py-4 text-white backdrop-blur-[2px]"
-      >
-      
-      </motion.div>
+        transition={{
+          duration: 0.55,
+          delay: 0.55,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className="absolute bottom-6 left-6 h-10 w-10 bg-[#ff4d12] sm:bottom-8 sm:left-8 sm:h-12 sm:w-12"
+      />
     </motion.div>
   );
 }
@@ -151,7 +167,10 @@ export default function HomePage() {
                   show: {
                     opacity: 1,
                     y: 0,
-                    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                    transition: {
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
                   },
                 }}
                 className="text-[0.78rem] uppercase tracking-[0.28em] text-white/45"
@@ -166,7 +185,10 @@ export default function HomePage() {
                     show: {
                       opacity: 1,
                       y: 0,
-                      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+                      transition: {
+                        duration: 0.7,
+                        ease: [0.22, 1, 0.36, 1],
+                      },
                     },
                   }}
                   className="text-[clamp(4.4rem,10vw,8.2rem)] font-black uppercase leading-[0.88] tracking-[-0.08em]"
@@ -182,7 +204,10 @@ export default function HomePage() {
                   show: {
                     opacity: 1,
                     y: 0,
-                    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+                    transition: {
+                      duration: 0.6,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
                   },
                 }}
                 className="mt-10 max-w-[560px] text-[1.18rem] leading-[1.7] text-white/72"
@@ -198,7 +223,10 @@ export default function HomePage() {
                   show: {
                     opacity: 1,
                     y: 0,
-                    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                    transition: {
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
                   },
                 }}
                 className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
@@ -213,7 +241,10 @@ export default function HomePage() {
                   show: {
                     opacity: 1,
                     y: 0,
-                    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+                    transition: {
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
                   },
                 }}
                 className="mt-16 grid gap-6 border-t border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-3"
@@ -244,6 +275,44 @@ export default function HomePage() {
                     South Africa — available for frontend and creative web work.
                   </p>
                 </div>
+              </motion.div>
+
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 18 },
+                  show: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.55,
+                      ease: [0.22, 1, 0.36, 1],
+                    },
+                  },
+                }}
+                className="mt-10 flex flex-wrap items-center gap-5 border-t border-white/10 pt-8"
+              >
+                {stackItems.map((item) => (
+                  <motion.div
+                    key={item.name}
+                    whileHover={{ y: -2 }}
+                    transition={{ duration: 0.18 }}
+                    className="group flex items-center gap-3"
+                  >
+                    <div className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors duration-200 group-hover:border-white/20 group-hover:bg-white/10">
+                      <Image
+                        src={item.icon}
+                        alt={item.name}
+                        width={20}
+                        height={20}
+                        className="object-contain"
+                      />
+                    </div>
+
+                    <span className="hidden text-[0.72rem] uppercase tracking-[0.18em] text-white/42 xl:inline">
+                      {item.name}
+                    </span>
+                  </motion.div>
+                ))}
               </motion.div>
             </div>
           </motion.div>
