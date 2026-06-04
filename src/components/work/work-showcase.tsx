@@ -1,16 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
@@ -29,18 +23,12 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
-import gsap from "gsap";
-import { Flip, SplitText } from "gsap/all";
-import { useGSAP } from "@gsap/react";
-import Link from "next/link";
 import {
   projects,
   filterMenuItems,
   type FilterKey,
   type WorkProject as Project,
 } from "@/data/work-projects";
-
-gsap.registerPlugin(Flip, SplitText, useGSAP);
 
 type ViewMode = "featured" | "split" | "grid";
 
@@ -359,7 +347,9 @@ function GalleryTriggerFill({ span = 1 }: { span?: 1 | 2 }) {
 
   return (
     <div
-      className={`hidden xl:block ${span === 2 ? "xl:col-span-2" : "xl:col-span-1"}`}
+      className={`hidden xl:block ${
+        span === 2 ? "xl:col-span-2" : "xl:col-span-1"
+      }`}
     >
       <div className="flex h-[520px] items-center justify-center">
         <Link
@@ -419,15 +409,33 @@ function GalleryTriggerFill({ span = 1 }: { span?: 1 | 2 }) {
 
 export function WorkShowcase() {
   const router = useRouter();
+
   const [filterOpen, setFilterOpen] = useState(false);
   const [filterHovered, setFilterHovered] = useState(false);
   const [hoveredFilterKey, setHoveredFilterKey] = useState<FilterKey | null>(
     null,
   );
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [viewMode, setViewMode] = useState<ViewMode>("featured");
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
+
+  const layoutRef = useRef<HTMLDivElement | null>(null);
+  const filterMenuRef = useRef<HTMLDivElement | null>(null);
+  const filterTriggerRef = useRef<HTMLDivElement | null>(null);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+
+  const rafRef = useRef<number | null>(null);
+  const safeActiveIndexRef = useRef(0);
+
+  const isDraggingRef = useRef(false);
+  const dragPointerIdRef = useRef<number | null>(null);
+  const dragStartXRef = useRef(0);
+  const dragStartScrollLeftRef = useRef(0);
+  const dragMovedRef = useRef(false);
+  const lastDragAtRef = useRef(0);
+  const pointerDownProjectSlugRef = useRef<string | null>(null);
+  const hasPointerCaptureRef = useRef(false);
 
   const openProject = useCallback(
     (project: Project) => {
@@ -436,36 +444,15 @@ export function WorkShowcase() {
     [router],
   );
 
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const titleRef = useRef<HTMLHeadingElement | null>(null);
-  const controlsRef = useRef<HTMLDivElement | null>(null);
-  const layoutRef = useRef<HTMLDivElement | null>(null);
-
-  const filterMenuRef = useRef<HTMLDivElement | null>(null);
-  const filterTriggerRef = useRef<HTMLDivElement | null>(null);
-
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const safeActiveIndexRef = useRef(0);
-
-  const isDraggingRef = useRef(false);
-  const dragPointerIdRef = useRef<number | null>(null);
-  const dragStartXRef = useRef(0);
-  const dragStartAtRef = useRef(0);
-  const dragStartScrollLeftRef = useRef(0);
-  const dragMovedRef = useRef(false);
-  const lastDragAtRef = useRef(0);
-  const pointerDownProjectSlugRef = useRef<string | null>(null);
-  const hasPointerCaptureRef = useRef(false);
-
-  const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
-
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
     return projects.filter((project) => project.tags.includes(activeFilter));
   }, [activeFilter]);
 
-  const loopedProjects = useMemo(() => {
+  const baseCount = filteredProjects.length;
+  const middleOffset = baseCount;
+
+  const desktopLoopedProjects = useMemo(() => {
     if (!filteredProjects.length) return [];
     return Array.from(
       { length: LOOP_MULTIPLIER },
@@ -473,12 +460,14 @@ export function WorkShowcase() {
     ).flat();
   }, [filteredProjects]);
 
-  const baseCount = filteredProjects.length;
-  const middleOffset = baseCount;
+  const featuredProjects = isCoarsePointer
+    ? filteredProjects
+    : desktopLoopedProjects;
   const filterIndicatorKey = hoveredFilterKey ?? activeFilter;
 
   const safeActiveIndex =
     baseCount === 0 ? 0 : Math.min(activeIndex, baseCount - 1);
+
   const gridRemainder = filteredProjects.length % 3;
   const showGridAmbientFill = viewMode === "grid" && gridRemainder !== 0;
   const gridAmbientSpan = gridRemainder === 1 ? 2 : 1;
@@ -537,94 +526,8 @@ export function WorkShowcase() {
     };
   }, [filterOpen]);
 
-  useGSAP(
-    () => {
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      ).matches;
-
-      if (prefersReducedMotion) {
-        if (controlsRef.current) {
-          gsap.set(Array.from(controlsRef.current.children), {
-            opacity: 1,
-            y: 0,
-          });
-        }
-        return;
-      }
-
-      let split: SplitText | null = null;
-
-      if (titleRef.current) {
-        split = SplitText.create(titleRef.current, {
-          type: "chars",
-          charsClass: "work-title-char",
-        });
-      }
-
-      const tl = gsap.timeline({
-        defaults: { ease: "power3.out" },
-      });
-
-      if (split?.chars?.length) {
-        tl.from(split.chars, {
-          yPercent: 110,
-          opacity: 0,
-          duration: 0.9,
-          stagger: 0.022,
-        });
-      }
-
-      if (controlsRef.current) {
-        tl.from(
-          Array.from(controlsRef.current.children),
-          {
-            y: 24,
-            opacity: 0,
-            duration: 0.65,
-            stagger: 0.06,
-          },
-          split ? "-=0.45" : 0,
-        );
-      }
-
-      return () => {
-        split?.revert();
-      };
-    },
-    { scope: rootRef },
-  );
-
-  useLayoutEffect(() => {
-    if (!flipStateRef.current || !layoutRef.current) return;
-
-    const state = flipStateRef.current;
-    flipStateRef.current = null;
-
-    const ctx = gsap.context(() => {
-      Flip.from(state, {
-        duration: 0.95,
-        ease: "power4.inOut",
-        absolute: true,
-        nested: true,
-        prune: true,
-        stagger: 0.03,
-      });
-    }, layoutRef);
-
-    return () => ctx.revert();
-  }, [viewMode, activeFilter]);
-
   function changeViewMode(nextMode: ViewMode) {
     if (nextMode === viewMode) return;
-
-    const canFlip =
-      layoutRef.current && viewMode !== "featured" && nextMode !== "featured";
-
-    if (canFlip) {
-      flipStateRef.current = Flip.getState("[data-flip-id]");
-    }
-
     setViewMode(nextMode);
   }
 
@@ -668,10 +571,7 @@ export function WorkShowcase() {
       const scroller = scrollerRef.current;
       if (!scroller) return;
 
-      const items = Array.from(
-        scroller.querySelectorAll<HTMLElement>("[data-carousel-item]"),
-      );
-
+      const items = getCarouselItems();
       const item = items[loopIndex];
       if (!item) return;
 
@@ -683,13 +583,9 @@ export function WorkShowcase() {
     [],
   );
 
-  const scrollToCardRef = useRef(scrollToCard);
-
-  useLayoutEffect(() => {
-    scrollToCardRef.current = scrollToCard;
-  }, [scrollToCard]);
-
   function normalizeInfinitePosition() {
+    if (isCoarsePointer) return;
+
     const scroller = scrollerRef.current;
     if (!scroller || baseCount === 0) return;
 
@@ -715,6 +611,12 @@ export function WorkShowcase() {
   function updateClosestCard() {
     const closestLoopIndex = getClosestLoopIndex();
     if (closestLoopIndex === null || baseCount === 0) return;
+
+    if (isCoarsePointer) {
+      setActiveIndex(Math.min(closestLoopIndex, baseCount - 1));
+      return;
+    }
+
     setActiveIndex(mod(closestLoopIndex, baseCount));
   }
 
@@ -726,18 +628,21 @@ export function WorkShowcase() {
     }
 
     rafRef.current = requestAnimationFrame(() => {
-      normalizeInfinitePosition();
+      if (!isCoarsePointer) {
+        normalizeInfinitePosition();
+      }
       updateClosestCard();
     });
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (viewMode !== "featured" || !scrollerRef.current) return;
+    if (viewMode !== "featured" || !scrollerRef.current || isCoarsePointer) {
+      return;
+    }
 
     isDraggingRef.current = true;
     dragPointerIdRef.current = event.pointerId;
     dragStartXRef.current = event.clientX;
-    dragStartAtRef.current = performance.now();
     dragStartScrollLeftRef.current = scrollerRef.current.scrollLeft;
     dragMovedRef.current = false;
     hasPointerCaptureRef.current = false;
@@ -745,16 +650,15 @@ export function WorkShowcase() {
     const projectCard = (event.target as HTMLElement | null)?.closest?.(
       '[data-project-card="true"]',
     ) as HTMLElement | null;
+
     pointerDownProjectSlugRef.current =
       projectCard?.dataset?.projectSlug ?? null;
-
-    // Only capture the pointer once the user is actually dragging.
-    // Capturing immediately prevents inner elements (buttons/links) from receiving click events.
   }
 
   function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
     if (
       viewMode !== "featured" ||
+      isCoarsePointer ||
       !isDraggingRef.current ||
       dragPointerIdRef.current !== event.pointerId ||
       !scrollerRef.current
@@ -804,11 +708,15 @@ export function WorkShowcase() {
     dragPointerIdRef.current = null;
     hasPointerCaptureRef.current = false;
 
-    normalizeInfinitePosition();
+    if (!isCoarsePointer) {
+      normalizeInfinitePosition();
+    }
     updateClosestCard();
   }
 
   function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    if (isCoarsePointer) return;
+
     endPointerDrag(event.pointerId);
 
     if (dragMovedRef.current) {
@@ -827,6 +735,8 @@ export function WorkShowcase() {
   }
 
   function handlePointerCancel(event: React.PointerEvent<HTMLDivElement>) {
+    if (isCoarsePointer) return;
+
     endPointerDrag(event.pointerId);
     pointerDownProjectSlugRef.current = null;
   }
@@ -846,16 +756,20 @@ export function WorkShowcase() {
   function scrollByOneCard(direction: 1 | -1) {
     if (!baseCount) return;
 
-    normalizeInfinitePosition();
+    if (!isCoarsePointer) {
+      normalizeInfinitePosition();
+    }
 
     const closestLoopIndex = getClosestLoopIndex();
     if (closestLoopIndex === null) return;
 
     const targetLoopIndex = closestLoopIndex + direction;
-    const nextBaseIndex = mod(targetLoopIndex, baseCount);
+    const nextBaseIndex = isCoarsePointer
+      ? Math.min(Math.max(targetLoopIndex, 0), baseCount - 1)
+      : mod(targetLoopIndex, baseCount);
 
     setActiveIndex(nextBaseIndex);
-    scrollToCard(targetLoopIndex, "smooth");
+    scrollToCard(isCoarsePointer ? nextBaseIndex : targetLoopIndex, "smooth");
   }
 
   function goPrev() {
@@ -878,32 +792,35 @@ export function WorkShowcase() {
     if (viewMode !== "featured" || baseCount === 0) return;
 
     const id = requestAnimationFrame(() => {
-      scrollToCardRef.current(
-        middleOffset + safeActiveIndexRef.current,
+      scrollToCard(
+        isCoarsePointer
+          ? safeActiveIndexRef.current
+          : middleOffset + safeActiveIndexRef.current,
         "auto",
       );
     });
 
     return () => cancelAnimationFrame(id);
-  }, [viewMode, activeFilter, baseCount, middleOffset]);
+  }, [
+    viewMode,
+    activeFilter,
+    baseCount,
+    middleOffset,
+    isCoarsePointer,
+    scrollToCard,
+  ]);
 
   return (
-    <section ref={rootRef} className="min-h-screen bg-[#efe6db] text-[#1b120d]">
+    <section className="min-h-screen bg-[#efe6db] text-[#1b120d]">
       <div className="px-6 py-8 md:px-8 lg:px-10 xl:px-12">
         <div className="mx-auto max-w-[1600px]">
           <div className="text-center">
-            <h1
-              ref={titleRef}
-              className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]"
-            >
+            <h1 className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]">
               PROJECTS
             </h1>
           </div>
 
-          <div
-            ref={controlsRef}
-            className="relative z-20 mt-10 grid gap-5 overflow-visible lg:mt-12 lg:grid-cols-[220px_1fr_220px] lg:items-center"
-          >
+          <div className="relative z-20 mt-10 grid gap-5 overflow-visible lg:mt-12 lg:grid-cols-[220px_1fr_220px] lg:items-center">
             <motion.div
               ref={filterTriggerRef}
               className="relative z-[80] w-fit overflow-visible"
@@ -1053,7 +970,10 @@ export function WorkShowcase() {
 
                         if (viewMode === "featured") {
                           requestAnimationFrame(() => {
-                            scrollToCard(middleOffset + index, "smooth");
+                            scrollToCard(
+                              isCoarsePointer ? index : middleOffset + index,
+                              "smooth",
+                            );
                           });
                         }
                       }}
@@ -1178,22 +1098,39 @@ export function WorkShowcase() {
             <AnimatePresence mode="wait">
               {viewMode === "featured" ? (
                 <motion.div
-                  key={`featured-${activeFilter}`}
+                  key={`featured-${activeFilter}-${isCoarsePointer ? "mobile" : "desktop"}`}
                   variants={layoutContainerVariants}
                   initial="hidden"
                   animate="show"
                   exit="exit"
                   ref={scrollerRef}
                   onScroll={handleScroll}
-                  onPointerDown={handlePointerDown}
-                  onPointerMove={handlePointerMove}
-                  onPointerUp={handlePointerUp}
-                  onPointerCancel={handlePointerCancel}
-                  className="mt-8 overflow-x-auto overflow-y-hidden select-none touch-pan-y cursor-grab active:cursor-grabbing [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                  onPointerDown={
+                    isCoarsePointer ? undefined : handlePointerDown
+                  }
+                  onPointerMove={
+                    isCoarsePointer ? undefined : handlePointerMove
+                  }
+                  onPointerUp={isCoarsePointer ? undefined : handlePointerUp}
+                  onPointerCancel={
+                    isCoarsePointer ? undefined : handlePointerCancel
+                  }
+                  className={`mt-8 overflow-x-auto overflow-y-hidden select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+                    isCoarsePointer
+                      ? "touch-pan-x snap-x snap-mandatory overscroll-x-contain scroll-smooth"
+                      : "touch-pan-y cursor-grab active:cursor-grabbing"
+                  }`}
+                  style={
+                    isCoarsePointer
+                      ? { WebkitOverflowScrolling: "touch" }
+                      : undefined
+                  }
                 >
                   <div className="flex min-w-max gap-3 px-[6vw] pb-3 sm:gap-4 sm:px-[4vw]">
-                    {loopedProjects.map((project, loopIndex) => {
-                      const baseIndex = mod(loopIndex, baseCount);
+                    {featuredProjects.map((project, loopIndex) => {
+                      const baseIndex = isCoarsePointer
+                        ? loopIndex
+                        : mod(loopIndex, baseCount);
                       const isActive = baseIndex === safeActiveIndex;
 
                       return (
@@ -1201,7 +1138,7 @@ export function WorkShowcase() {
                           key={`${project.id}-${loopIndex}`}
                           data-carousel-item
                           variants={layoutItemVariants}
-                          className="shrink-0"
+                          className={`shrink-0 ${isCoarsePointer ? "snap-center" : ""}`}
                         >
                           <InteractiveProjectCard
                             project={project}
@@ -1211,10 +1148,12 @@ export function WorkShowcase() {
                             heightClass={CARD_MEDIA_HEIGHT}
                             coarsePointer={isCoarsePointer}
                             onClick={() => {
-                              if (Date.now() - lastDragAtRef.current < 250) {
+                              if (
+                                !isCoarsePointer &&
+                                Date.now() - lastDragAtRef.current < 250
+                              ) {
                                 return;
                               }
-
                               openProject(project);
                             }}
                           />
@@ -1235,11 +1174,7 @@ export function WorkShowcase() {
                   className="mt-8 grid gap-5 xl:grid-cols-2"
                 >
                   {filteredProjects.map((project) => (
-                    <div
-                      key={project.id}
-                      data-flip-id={`project-${project.id}`}
-                      className="w-full"
-                    >
+                    <div key={project.id} className="w-full">
                       <InteractiveProjectCard
                         project={project}
                         widthClass="w-full"
@@ -1262,11 +1197,7 @@ export function WorkShowcase() {
                   className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
                 >
                   {filteredProjects.map((project) => (
-                    <div
-                      key={project.id}
-                      data-flip-id={`project-${project.id}`}
-                      className="w-full"
-                    >
+                    <div key={project.id} className="w-full">
                       <InteractiveProjectCard
                         project={project}
                         widthClass="w-full"
