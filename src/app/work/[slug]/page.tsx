@@ -1,207 +1,435 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { ArrowUpRight, Plus } from "lucide-react";
+import { SiteShell } from "@/components/layout/site-shell";
 import { getProjectBySlug } from "@/data/work-projects";
 
-function Divider() {
-  return <div className="h-px w-full bg-black/10" />;
-}
-
-function MetaRow({ label, value }: { label: string; value: string }) {
+function SectionEyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <div className="py-4">
-        <p className="text-[1.08rem] text-black/85">
-          {label}: {value}
-        </p>
-      </div>
-      <Divider />
-    </>
+    <div className="mb-5 flex items-center gap-3 text-[11px] font-medium uppercase tracking-[0.18em] text-[#ff4d12]">
+      <span className="h-[8px] w-[8px] bg-[#ff4d12]" />
+      <span>{children}</span>
+    </div>
   );
 }
 
-export default async function WorkProjectPage({
-  params,
+function DetailRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="border-t border-black/10 py-4">
+      <p className="text-[0.72rem] uppercase tracking-[0.16em] text-black/36">
+        {label}
+      </p>
+      <p className="mt-2 text-[1rem] leading-[1.7] text-black/78">{value}</p>
+    </div>
+  );
+}
+
+function CtaButton({
+  href,
+  label,
+  external = false,
 }: {
-  params: Promise<{ slug: string }>;
+  href: string;
+  label: string;
+  external?: boolean;
 }) {
-  const { slug } = await params;
-  const project = getProjectBySlug(slug);
+  const content = (
+    <>
+      <span className="inline-flex h-[56px] items-center bg-[#ff4d12] px-7 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]">
+        {label}
+      </span>
+      <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#ff4d12] text-black">
+        {external ? (
+          <ArrowUpRight className="h-5 w-5" />
+        ) : (
+          <Plus className="h-5 w-5" />
+        )}
+      </span>
+    </>
+  );
 
-  if (!project) notFound();
-
-  const uiGallery = [
-    project.caseStudy.overviewImage,
-    ...project.caseStudy.galleryImages,
-    project.caseStudy.heroImage,
-    project.caseStudy.challengeImage,
-  ]
-    .filter(Boolean)
-    .filter((src, index, arr) => arr.indexOf(src) === index)
-    .slice(0, 4);
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex items-stretch"
+      >
+        {content}
+      </a>
+    );
+  }
 
   return (
-    <main className="min-h-screen bg-[#f4f1ec] text-[#14110e]">
-      <header className="mx-auto w-full max-w-[1600px] px-4 pt-8 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-6 border border-black/10 bg-white/60 p-6 backdrop-blur sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2">
-            <Link
-              href="/work"
-              className="inline-flex items-center gap-2 text-[0.72rem] font-medium uppercase tracking-[0.22em] text-black/60 transition hover:text-black"
+    <Link href={href} className="inline-flex items-stretch">
+      {content}
+    </Link>
+  );
+}
+
+export default function WorkProjectPage() {
+  const params = useParams();
+  const slug = typeof params.slug === "string" ? params.slug : "";
+  const project = getProjectBySlug(slug);
+
+  if (!project) {
+    notFound();
+  }
+
+  const { caseStudy } = project;
+
+  return (
+    <SiteShell>
+      <div className="min-h-screen bg-[#f3f0ea] text-black">
+        <section className="px-6 py-8 sm:px-8 lg:px-12 xl:px-16">
+          <div className="mx-auto max-w-[1600px]">
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span aria-hidden>←</span>
-              Back to work
-            </Link>
-            <h1 className="text-[clamp(2.4rem,6vw,4.4rem)] font-medium leading-[0.94] tracking-[-0.06em]">
-              {project.title}
-            </h1>
-            <p className="text-[0.78rem] uppercase tracking-[0.22em] text-black/45">
-              {project.meta}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link
-              href={project.liveUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-[46px] items-center justify-center bg-[#ff5a1f] px-6 text-[0.72rem] font-medium uppercase tracking-[0.22em] text-black transition hover:opacity-90"
-            >
-              View live site
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      <section className="mx-auto max-w-[1600px] px-4 pb-16 pt-8 sm:px-6 lg:px-8">
-        <div className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
-          <div className="space-y-8">
-            <div className="relative overflow-hidden bg-[#121212]">
-              <div className="relative aspect-[16/8] min-h-[260px] w-full">
-                <Image
-                  src={project.caseStudy.heroImage}
-                  alt={`${project.title} hero`}
-                  fill
-                  priority
-                  className="object-cover"
-                />
-              </div>
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 overflow-hidden">
-                <div className="translate-y-[18%] text-[clamp(3.5rem,14vw,12rem)] font-semibold leading-none tracking-[-0.08em] text-white/18">
-                  {project.caseStudy.ghostTitle}
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h2 className="text-[clamp(2.1rem,5vw,3.3rem)] font-medium leading-[0.98] tracking-[-0.06em]">
-                {project.caseStudy.introHeading}
-              </h2>
-              <Divider />
-              <div className="max-w-[900px] space-y-6 text-[1.08rem] leading-[1.75] text-black/72">
-                {project.caseStudy.introBody.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <aside className="space-y-6">
-            <div className="border border-black/10 bg-white/70 p-6 backdrop-blur">
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-black/45">
-                Project details
-              </p>
-              <div className="mt-4 space-y-0">
-                {project.caseStudy.details.map((item) => (
-                  <MetaRow key={item.label} label={item.label} value={item.value} />
-                ))}
-              </div>
-            </div>
-
-            <div className="border border-black/10 bg-white/70 p-6 backdrop-blur">
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-black/45">
-                Tech used
-              </p>
-              <div className="mt-3 text-[1.02rem] leading-[1.7] text-black/72">
-                {project.caseStudy.details.find((item) => item.label === "Techstack")
-                  ?.value ?? "—"}
-              </div>
-            </div>
-          </aside>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="space-y-6">
-          <div className="flex items-end justify-between gap-6">
-            <div className="space-y-2">
-              <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-black/45">
-                UI gallery
-              </p>
-              <h3 className="text-[clamp(1.8rem,4vw,2.7rem)] font-medium leading-[0.98] tracking-[-0.06em]">
-                Four key screens
-              </h3>
-            </div>
-          </div>
-
-          <Divider />
-
-          <div className="grid gap-5 md:grid-cols-2">
-            {uiGallery.map((src) => (
-              <div key={src} className="overflow-hidden bg-white/60 p-4">
-                <div className="relative aspect-[16/10] w-full">
+              <div className="relative overflow-hidden border border-black/8 bg-black/5">
+                <div className="relative aspect-[16/7]">
                   <Image
-                    src={src}
-                    alt={`${project.title} UI screen`}
+                    src={caseStudy.heroImage}
+                    alt={project.alt}
                     fill
+                    priority
+                    sizes="100vw"
                     className="object-cover"
                   />
                 </div>
+
+                <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+                  <h1 className="text-center text-[clamp(3.8rem,11vw,10rem)] font-semibold uppercase leading-none tracking-[-0.08em] text-white/30">
+                    {caseStudy.ghostTitle}
+                  </h1>
+                </div>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </motion.div>
 
-      <section className="mx-auto max-w-[1600px] px-4 pb-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 border-t border-black/10 pt-12 lg:grid-cols-[1fr_1.2fr] lg:items-start">
-          <div className="space-y-3">
-            <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-black/45">
-              Challenges
-            </p>
-            <h3 className="text-[clamp(2rem,4.2vw,3.2rem)] font-medium leading-[0.98] tracking-[-0.06em]">
-              {project.caseStudy.challengeHeading}
-            </h3>
-          </div>
+            <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(320px,0.85fr)_minmax(420px,1.15fr)] xl:gap-16">
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.06,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <h2 className="text-[clamp(2.8rem,6vw,5.6rem)] font-semibold leading-[0.94] tracking-[-0.08em] text-black">
+                  {project.title}
+                </h2>
 
-          <div className="space-y-6">
-            <div className="max-w-[900px] space-y-6 text-[1.08rem] leading-[1.75] text-black/72">
-              {project.caseStudy.challengeBody.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+                <div className="mt-8">
+                  <CtaButton
+                    href={project.liveUrl}
+                    label="Live View"
+                    external
+                  />
+                </div>
+
+                <div className="mt-10">
+                  {caseStudy.details.map((detail) => (
+                    <DetailRow
+                      key={detail.label}
+                      label={detail.label}
+                      value={detail.value}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.1,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <SectionEyebrow>Overview</SectionEyebrow>
+
+                <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                  {caseStudy.introHeading}
+                </h3>
+
+                <div className="mt-8 space-y-5 text-[1.02rem] leading-[1.95] text-black/58 xl:text-[1.08rem]">
+                  {caseStudy.introBody.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              </motion.div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="mx-auto max-w-[1600px] px-4 pb-24 sm:px-6 lg:px-8">
-        <div className="grid gap-10 border-t border-black/10 pt-12 lg:grid-cols-[1fr_1.2fr]">
-          <div className="space-y-3">
-            <p className="text-[0.68rem] font-medium uppercase tracking-[0.24em] text-black/45">
-              Outcome
-            </p>
-            <h3 className="text-[clamp(2rem,4.2vw,3.2rem)] font-medium leading-[0.98] tracking-[-0.06em]">
-              {project.caseStudy.outcomeHeading}
-            </h3>
-          </div>
+            <div className="mt-16 grid gap-10 lg:grid-cols-[minmax(320px,0.92fr)_minmax(420px,1.08fr)] xl:gap-16">
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.14,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className="relative overflow-hidden border border-black/8 bg-black/5">
+                  <div className="relative aspect-[1.12/1]">
+                    <Image
+                      src={caseStudy.challengeImage}
+                      alt={`${project.title} challenge visual`}
+                      fill
+                      sizes="(min-width: 1024px) 42vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
 
-          <div className="max-w-[900px] space-y-6 text-[1.08rem] leading-[1.75] text-black/72">
-            {project.caseStudy.outcomeBody.map((paragraph) => (
-              <p key={paragraph}>{paragraph}</p>
-            ))}
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.18,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <SectionEyebrow>Challenge</SectionEyebrow>
+
+                <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                  {caseStudy.challengeHeading}
+                </h3>
+
+                <div className="mt-8 space-y-5 text-[1.02rem] leading-[1.95] text-black/58 xl:text-[1.08rem]">
+                  {caseStudy.challengeBody.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+
+            {caseStudy.solutionHeading && caseStudy.solutionBody?.length ? (
+              <div className="mt-16 grid gap-10 lg:grid-cols-[minmax(320px,0.92fr)_minmax(420px,1.08fr)] xl:gap-16">
+                <motion.div
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.22,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  <div className="relative overflow-hidden border border-black/8 bg-black/5">
+                    <div className="relative aspect-[1.12/1]">
+                      <Image
+                        src={caseStudy.overviewImage}
+                        alt={`${project.title} solution visual`}
+                        fill
+                        sizes="(min-width: 1024px) 42vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 22 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.26,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
+                  <SectionEyebrow>Solution</SectionEyebrow>
+
+                  <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                    {caseStudy.solutionHeading}
+                  </h3>
+
+                  <div className="mt-8 space-y-5 text-[1.02rem] leading-[1.95] text-black/58 xl:text-[1.08rem]">
+                    {caseStudy.solutionBody.map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            ) : null}
+
+            {caseStudy.featuresHeading && caseStudy.features?.length ? (
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.3,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mt-16"
+              >
+                <SectionEyebrow>Features</SectionEyebrow>
+
+                <div className="grid gap-10 lg:grid-cols-[minmax(320px,0.7fr)_minmax(420px,1.3fr)] xl:gap-16">
+                  <div>
+                    <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                      {caseStudy.featuresHeading}
+                    </h3>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {caseStudy.features.map((feature, index) => (
+                      <div
+                        key={index}
+                        className="border border-black/10 bg-white/60 p-5 text-[0.98rem] leading-[1.75] text-black/70"
+                      >
+                        <div className="mb-3 h-[8px] w-[8px] bg-[#ff4d12]" />
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ) : null}
+
+            {caseStudy.techHeading && caseStudy.techStack?.length ? (
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.34,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className="mt-16"
+              >
+                <SectionEyebrow>Technology</SectionEyebrow>
+
+                <div className="grid gap-10 lg:grid-cols-[minmax(320px,0.7fr)_minmax(420px,1.3fr)] xl:gap-16">
+                  <div>
+                    <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                      {caseStudy.techHeading}
+                    </h3>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    {caseStudy.techStack.map((item, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center border border-black/10 bg-white/70 px-4 py-3 text-[0.85rem] uppercase tracking-[0.08em] text-black/76"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ) : null}
+
+            <div className="mt-16 grid gap-10 lg:grid-cols-[minmax(320px,0.92fr)_minmax(420px,1.08fr)] xl:gap-16">
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.38,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className="relative overflow-hidden border border-black/8 bg-black/5">
+                  <div className="relative aspect-[1.12/1]">
+                    <Image
+                      src={caseStudy.overviewImage}
+                      alt={`${project.title} overview visual`}
+                      fill
+                      sizes="(min-width: 1024px) 42vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 22 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.42,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <SectionEyebrow>Outcome</SectionEyebrow>
+
+                <h3 className="max-w-[12ch] text-[clamp(2.2rem,5vw,4.5rem)] font-semibold leading-[0.96] tracking-[-0.06em] text-black">
+                  {caseStudy.outcomeHeading}
+                </h3>
+
+                <div className="mt-8 space-y-5 text-[1.02rem] leading-[1.95] text-black/58 xl:text-[1.08rem]">
+                  {caseStudy.outcomeBody.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: 0.46,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-16"
+            >
+              <SectionEyebrow>Gallery</SectionEyebrow>
+
+              <div className="grid gap-5 md:grid-cols-2">
+                {caseStudy.galleryImages.map((image, index) => (
+                  <div
+                    key={index}
+                    className="relative overflow-hidden border border-black/8 bg-black/5"
+                  >
+                    <div className="relative aspect-[1.25/1]">
+                      <Image
+                        src={image}
+                        alt={`${project.title} gallery image ${index + 1}`}
+                        fill
+                        sizes="(min-width: 768px) 50vw, 100vw"
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 22 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.7,
+                delay: 0.5,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="mt-16 flex flex-wrap gap-4"
+            >
+              <CtaButton
+                href={project.liveUrl}
+                label="View Live Site"
+                external
+              />
+              <CtaButton href="/work" label="Back to Projects" />
+            </motion.div>
           </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </div>
+    </SiteShell>
   );
 }

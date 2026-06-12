@@ -35,61 +35,89 @@ export default function AboutPage() {
                 </div>
 
                 <div className="mt-4 inline-flex items-center bg-[#ff4d12] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.16em] text-white">
-                  Frontend / Motion / UI Systems
+                  Full-Stack Development / Software Systems / Product Design
                 </div>
               </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 22 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.08,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
                 className="max-w-[760px]"
               >
-                <h1 className="max-w-[10ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
-                  Frontend systems that feel clear, sharp, and memorable.
+                <h1 className="max-w-[11ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
+                  I design and build complete digital systems.
                 </h1>
 
                 <div className="mt-8 space-y-6 text-[1.02rem] leading-[1.95] text-black/56 xl:text-[1.08rem]">
                   <p>
-                    I build at the intersection of{" "}
+                    I work across{" "}
                     <span className="font-semibold text-black">
-                      visual identity, motion, and frontend structure
+                      full-stack software development, product design, and
+                      digital systems architecture
                     </span>
-                    . My work is shaped by typography, rhythm, editorial spacing,
-                    and the small interaction details that make a website feel
-                    intentional from the first second.
+                    . My focus is on building refined, functional, and scalable
+                    products that are designed with intention and developed with
+                    structure.
                   </p>
 
                   <p>
-                    I care about building interfaces that do more than function. I
-                    want them to feel composed, premium, and easy to remember.
-                    Most of what I make lives between{" "}
+                    I create full-stack web applications, SaaS platforms,
+                    dashboards, customer portals, e-commerce systems, internal
+                    tools, booking platforms, data-driven interfaces, and custom
+                    digital products for modern organizations.
+                  </p>
+
+                  <p>
+                    My work covers both the{" "}
                     <span className="font-semibold text-black">
-                      brand sites, portfolios, gallery-like experiences, and
-                      motion-led UI systems
+                      user-facing experience and the technical foundation behind
+                      it
                     </span>
-                    .
+                    . That includes frontend interfaces, backend APIs,
+                    databases, authentication, business logic, workflows,
+                    integrations, and the overall structure that makes a product
+                    reliable and usable.
                   </p>
 
                   <p>
-                    Outside of standard web layouts, I also use code as a visual
-                    sketchbook. That means experimenting with interfaces,
-                    compositions, motion studies, and design systems that feel
-                    closer to digital art direction than generic product UI.
+                    I approach every project as a complete system. I think about
+                    how the product looks, how it feels, how users move through
+                    it, how data is handled, how features connect, and how the
+                    platform can grow without becoming complicated.
                   </p>
 
                   <p>
-                    I am based in{" "}
-                    <span className="font-semibold text-black">South Africa</span>{" "}
-                    and focused on frontend work that balances aesthetics with
-                    clean execution.
+                    My goal is to create software that feels clean and simple on
+                    the surface, but is thoughtful, scalable, and dependable
+                    underneath — whether it is for a brand, agency, startup,
+                    established company, public-facing platform, or internal
+                    business operation.
+                  </p>
+
+                  <p>
+                    Based in{" "}
+                    <span className="font-semibold text-black">
+                      South Africa
+                    </span>
+                    , I build digital products for clients who need more than
+                    just a website — they need software that works, communicates
+                    clearly, and supports real operations.
                   </p>
                 </div>
 
                 <motion.div
                   initial={{ opacity: 0, y: 18 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.16,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
                   className="mt-10 border border-black/10 bg-white/55 p-6 sm:p-7"
                 >
                   <div className="flex gap-4">
@@ -97,20 +125,25 @@ export default function AboutPage() {
 
                     <div className="min-w-0">
                       <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-black">
-                        Frontend Craft — Motion / UI / Editorial Systems
+                        Full-Stack Software Developer — Systems / Platforms /
+                        Digital Products
                       </h2>
                       <p className="mt-2 text-[0.98rem] leading-[1.8] text-black/52">
-                        Brand sites, portfolios, landing pages, gallery systems,
-                        interaction design, layout rhythm, and restrained motion
-                        built with design sensitivity and strong frontend
-                        structure.
+                        I design and develop digital products from concept to
+                        working system — combining interface design, frontend
+                        development, backend architecture, databases, APIs,
+                        authentication, dashboards, workflows, and business
+                        logic into complete software experiences.
                       </p>
                     </div>
                   </div>
                 </motion.div>
 
                 <div className="mt-10 flex flex-wrap gap-4">
-                  <Link href="/work" className="group inline-flex items-stretch">
+                  <Link
+                    href="/work"
+                    className="group inline-flex items-stretch"
+                  >
                     <span className="inline-flex h-[56px] items-center bg-[#ff4d12] px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-white transition-transform duration-200 group-hover:-translate-y-[1px]">
                       View Work
                     </span>
@@ -119,7 +152,10 @@ export default function AboutPage() {
                     </span>
                   </Link>
 
-                  <Link href="/contact" className="group inline-flex items-stretch">
+                  <Link
+                    href="/contact"
+                    className="group inline-flex items-stretch"
+                  >
                     <span className="inline-flex h-[56px] items-center border border-black/12 bg-transparent px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-black transition-colors duration-200 group-hover:bg-black group-hover:text-white">
                       Contact
                     </span>

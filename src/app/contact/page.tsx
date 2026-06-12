@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { FormEvent } from "react";
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { Plus } from "lucide-react";
+import type { FormEvent, ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, ChevronDown, Plus } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 
-const CONTACT_EMAIL = "marcusmdle@gmail.com";
+const CONTACT_EMAIL = "mphomdluli@icloud.com";
+const BOOK_CALL_URL = "https://calendly.com/YOUR-CALENDLY-LINK";
 
 type FormState = {
   firstName: string;
@@ -18,6 +19,18 @@ type FormState = {
   budget: string;
   message: string;
 };
+
+type BudgetOption = {
+  label: string;
+  value: string;
+};
+
+const budgetOptions: BudgetOption[] = [
+  { label: "Under R10,000", value: "under-10000" },
+  { label: "R10,000 – R25,000", value: "10000-25000" },
+  { label: "R25,000 – R50,000", value: "25000-50000" },
+  { label: "R50,000+", value: "50000-plus" },
+];
 
 function validateForm(payload: FormState): string[] {
   const errors: string[] = [];
@@ -33,19 +46,43 @@ function validateForm(payload: FormState): string[] {
   return errors;
 }
 
-function ActionButton({ href, label }: { href: string; label: string }) {
-  return (
-    <div className="inline-flex items-stretch">
-      <Link
-        href={href}
-        className="inline-flex h-[56px] items-center bg-[#ff4d12] px-8 text-[0.95rem] font-medium uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]"
-      >
+function ActionButton({
+  href,
+  label,
+  external = false,
+}: {
+  href: string;
+  label: string;
+  external?: boolean;
+}) {
+  const content = (
+    <>
+      <span className="inline-flex h-[56px] items-center bg-[#ff4d12] px-8 text-[0.95rem] font-medium uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]">
         {label}
-      </Link>
+      </span>
       <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#ff4d12] text-black">
         <Plus size={20} strokeWidth={2.2} />
       </span>
-    </div>
+    </>
+  );
+
+  if (external) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex items-stretch"
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href} className="inline-flex items-stretch">
+      {content}
+    </Link>
   );
 }
 
@@ -61,9 +98,7 @@ function Field({
   name: keyof FormState;
   value: string;
   onChange: (
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
 }) {
   return (
@@ -79,6 +114,131 @@ function Field({
         className="w-full border-0 border-b border-black/14 bg-transparent pb-4 text-[0.98rem] text-black outline-none placeholder:text-black/18 focus:border-black/40 md:pb-5 md:text-[1rem]"
       />
     </label>
+  );
+}
+
+function BudgetSelect({
+  value,
+  onChange,
+  options,
+  placeholder = "Select budget range",
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  options: BudgetOption[];
+  placeholder?: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  const selected = options.find((option) => option.value === value);
+
+  useEffect(() => {
+    function handleOutside(event: MouseEvent) {
+      if (!rootRef.current) return;
+      if (!rootRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    window.addEventListener("mousedown", handleOutside);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("mousedown", handleOutside);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, []);
+
+  return (
+    <div ref={rootRef} className="relative w-full">
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        className="flex h-[58px] w-full items-center justify-between border-0 border-b border-black/14 bg-transparent px-0 pb-4 text-left outline-none transition-colors hover:border-black/28 focus:border-black/40 md:pb-5"
+      >
+        <span
+          className={`text-[0.98rem] md:text-[1rem] ${
+            selected ? "text-black" : "text-black/32"
+          }`}
+        >
+          {selected ? selected.label : placeholder}
+        </span>
+
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.18 }}
+          className="text-black/60"
+        >
+          <ChevronDown size={18} strokeWidth={2.1} />
+        </motion.span>
+      </button>
+
+      <AnimatePresence>
+        {open ? (
+          <motion.div
+            initial={{ opacity: 0, y: 8, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, y: 0, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, y: 6, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute left-0 top-[calc(100%+10px)] z-50 w-full overflow-hidden border border-black/10 bg-[#f3f0ea] shadow-[0_18px_50px_rgba(0,0,0,0.08)]"
+          >
+            <div role="listbox" className="py-2">
+              {options.map((option) => {
+                const active = option.value === value;
+
+                return (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="option"
+                    aria-selected={active}
+                    onClick={() => {
+                      onChange(option.value);
+                      setOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between px-4 py-3 text-left text-[0.95rem] transition-colors ${
+                      active
+                        ? "bg-[#ff4d12] text-white"
+                        : "text-black/80 hover:bg-black hover:text-white"
+                    }`}
+                  >
+                    <span>{option.label}</span>
+                    <span className="ml-4">
+                      {active ? <Check size={16} strokeWidth={2.2} /> : null}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function SubmitButton({ children }: { children: ReactNode }) {
+  return (
+    <div className="inline-flex items-stretch">
+      <button
+        type="submit"
+        className="inline-flex h-[56px] items-center bg-[#ff4d12] px-8 text-[0.95rem] font-medium uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]"
+      >
+        {children}
+      </button>
+      <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#ff4d12] text-black">
+        <Plus size={20} strokeWidth={2.2} />
+      </span>
+    </div>
   );
 }
 
@@ -101,9 +261,7 @@ export default function ContactPage() {
   });
 
   function handleChange(
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     const { name, value } = event.target;
     setForm((prev) => ({
@@ -127,7 +285,10 @@ export default function ContactPage() {
       `From: ${form.firstName} ${form.lastName}`,
       `Reply-to: ${form.email}`,
       `Company: ${form.company || "—"}`,
-      `Budget: ${form.budget || "—"}`,
+      `Budget: ${
+        budgetOptions.find((option) => option.value === form.budget)?.label ||
+        "—"
+      }`,
       "",
       form.message,
     ].join("\n");
@@ -147,7 +308,7 @@ export default function ContactPage() {
 
   return (
     <SiteShell>
-      <section className="min-h-screen bg-[white px-5 py-8 md:px-8 md:py-10 xl:px-12">
+      <section className="min-h-screen bg-white px-5 py-8 md:px-8 md:py-10 xl:px-12">
         <div className="mx-auto max-w-[1560px]">
           <div className="grid gap-8 md:gap-10 xl:grid-cols-[0.92fr_0.58fr_1.04fr] xl:items-start">
             <motion.div
@@ -242,7 +403,11 @@ export default function ContactPage() {
                 </p>
 
                 <div className="mt-6 md:mt-8">
-                  <ActionButton href="/contact" label="Book a Call" />
+                  <ActionButton
+                    href={BOOK_CALL_URL}
+                    label="Book a Call"
+                    external
+                  />
                 </div>
               </div>
 
@@ -290,18 +455,17 @@ export default function ContactPage() {
                     <span className="mb-3 block text-[0.9rem] text-black/28 md:mb-4 md:text-[0.95rem]">
                       Budget range *
                     </span>
-                    <select
-                      name="budget"
+                    <BudgetSelect
                       value={form.budget}
-                      onChange={handleChange}
-                      className="w-full border-0 border-b border-black/14 bg-transparent pb-4 text-[0.98rem] text-black outline-none focus:border-black/40 md:pb-5 md:text-[1rem]"
-                    >
-                      <option value="">Select budget range</option>
-                      <option>Under R10,000</option>
-                      <option>R10,000 – R25,000</option>
-                      <option>R25,000 – R50,000</option>
-                      <option>R50,000+</option>
-                    </select>
+                      onChange={(value) =>
+                        setForm((prev) => ({
+                          ...prev,
+                          budget: value,
+                        }))
+                      }
+                      options={budgetOptions}
+                      placeholder="Select budget range"
+                    />
                   </label>
 
                   <label className="block">
@@ -318,17 +482,7 @@ export default function ContactPage() {
                   </label>
 
                   <div className="pt-2">
-                    <div className="inline-flex items-stretch">
-                      <button
-                        type="submit"
-                        className="inline-flex h-[56px] items-center bg-[#f0a08a] px-8 text-[0.95rem] font-medium uppercase tracking-[0.08em] text-[#6d747f] transition hover:brightness-[0.98]"
-                      >
-                        Send Message
-                      </button>
-                      <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#f0a08a] text-[#6d747f]">
-                        <Plus size={20} strokeWidth={2.2} />
-                      </span>
-                    </div>
+                    <SubmitButton>Send Message</SubmitButton>
 
                     {submitState.type !== "idle" && (
                       <p

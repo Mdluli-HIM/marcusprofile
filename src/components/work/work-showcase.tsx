@@ -4,7 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   AnimatePresence,
   motion,
@@ -23,12 +30,17 @@ import {
   LayoutGrid,
 } from "lucide-react";
 
+import gsap from "gsap";
+import { Flip, SplitText } from "gsap/all";
+import { useGSAP } from "@gsap/react";
 import {
   projects,
   filterMenuItems,
   type FilterKey,
   type WorkProject as Project,
 } from "@/data/work-projects";
+
+gsap.registerPlugin(Flip, SplitText, useGSAP);
 
 type ViewMode = "featured" | "split" | "grid";
 
@@ -416,15 +428,26 @@ export function WorkShowcase() {
     null,
   );
   const [activeFilter, setActiveFilter] = useState<FilterKey>("All");
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
   const [viewMode, setViewMode] = useState<ViewMode>("featured");
   const [isCoarsePointer, setIsCoarsePointer] = useState(false);
 
+  const openProject = useCallback(
+    (project: Project) => {
+      router.push(`/work/${project.slug}`);
+    },
+    [router],
+  );
+
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const titleRef = useRef<HTMLHeadingElement | null>(null);
+  const controlsRef = useRef<HTMLDivElement | null>(null);
   const layoutRef = useRef<HTMLDivElement | null>(null);
+
   const filterMenuRef = useRef<HTMLDivElement | null>(null);
   const filterTriggerRef = useRef<HTMLDivElement | null>(null);
-  const scrollerRef = useRef<HTMLDivElement | null>(null);
 
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const safeActiveIndexRef = useRef(0);
 
@@ -437,12 +460,7 @@ export function WorkShowcase() {
   const pointerDownProjectSlugRef = useRef<string | null>(null);
   const hasPointerCaptureRef = useRef(false);
 
-  const openProject = useCallback(
-    (project: Project) => {
-      router.push(`/work/${project.slug}`);
-    },
-    [router],
-  );
+  const flipStateRef = useRef<ReturnType<typeof Flip.getState> | null>(null);
 
   const filteredProjects = useMemo(() => {
     if (activeFilter === "All") return projects;
@@ -452,17 +470,15 @@ export function WorkShowcase() {
   const baseCount = filteredProjects.length;
   const middleOffset = baseCount;
 
-  const desktopLoopedProjects = useMemo(() => {
+  const featuredProjects = useMemo(() => {
     if (!filteredProjects.length) return [];
+    if (isCoarsePointer) return filteredProjects;
     return Array.from(
       { length: LOOP_MULTIPLIER },
       () => filteredProjects,
     ).flat();
-  }, [filteredProjects]);
+  }, [filteredProjects, isCoarsePointer]);
 
-  const featuredProjects = isCoarsePointer
-    ? filteredProjects
-    : desktopLoopedProjects;
   const filterIndicatorKey = hoveredFilterKey ?? activeFilter;
 
   const safeActiveIndex =
@@ -526,8 +542,94 @@ export function WorkShowcase() {
     };
   }, [filterOpen]);
 
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      if (prefersReducedMotion) {
+        if (controlsRef.current) {
+          gsap.set(Array.from(controlsRef.current.children), {
+            opacity: 1,
+            y: 0,
+          });
+        }
+        return;
+      }
+
+      let split: SplitText | null = null;
+
+      if (titleRef.current) {
+        split = SplitText.create(titleRef.current, {
+          type: "chars",
+          charsClass: "work-title-char",
+        });
+      }
+
+      const tl = gsap.timeline({
+        defaults: { ease: "power3.out" },
+      });
+
+      if (split?.chars?.length) {
+        tl.from(split.chars, {
+          yPercent: 110,
+          opacity: 0,
+          duration: 0.9,
+          stagger: 0.022,
+        });
+      }
+
+      if (controlsRef.current) {
+        tl.from(
+          Array.from(controlsRef.current.children),
+          {
+            y: 24,
+            opacity: 0,
+            duration: 0.65,
+            stagger: 0.06,
+          },
+          split ? "-=0.45" : 0,
+        );
+      }
+
+      return () => {
+        split?.revert();
+      };
+    },
+    { scope: rootRef },
+  );
+
+  useLayoutEffect(() => {
+    if (!flipStateRef.current || !layoutRef.current) return;
+
+    const state = flipStateRef.current;
+    flipStateRef.current = null;
+
+    const ctx = gsap.context(() => {
+      Flip.from(state, {
+        duration: 0.95,
+        ease: "power4.inOut",
+        absolute: true,
+        nested: true,
+        prune: true,
+        stagger: 0.03,
+      });
+    }, layoutRef);
+
+    return () => ctx.revert();
+  }, [viewMode, activeFilter]);
+
   function changeViewMode(nextMode: ViewMode) {
     if (nextMode === viewMode) return;
+
+    const canFlip =
+      layoutRef.current && viewMode !== "featured" && nextMode !== "featured";
+
+    if (canFlip) {
+      flipStateRef.current = Flip.getState("[data-flip-id]");
+    }
+
     setViewMode(nextMode);
   }
 
@@ -583,6 +685,12 @@ export function WorkShowcase() {
     [],
   );
 
+  const scrollToCardRef = useRef(scrollToCard);
+
+  useLayoutEffect(() => {
+    scrollToCardRef.current = scrollToCard;
+  }, [scrollToCard]);
+
   function normalizeInfinitePosition() {
     if (isCoarsePointer) return;
 
@@ -636,7 +744,7 @@ export function WorkShowcase() {
   }
 
   function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-    if (viewMode !== "featured" || !scrollerRef.current || isCoarsePointer) {
+    if (viewMode !== "featured" || isCoarsePointer || !scrollerRef.current) {
       return;
     }
 
@@ -792,7 +900,7 @@ export function WorkShowcase() {
     if (viewMode !== "featured" || baseCount === 0) return;
 
     const id = requestAnimationFrame(() => {
-      scrollToCard(
+      scrollToCardRef.current(
         isCoarsePointer
           ? safeActiveIndexRef.current
           : middleOffset + safeActiveIndexRef.current,
@@ -801,26 +909,25 @@ export function WorkShowcase() {
     });
 
     return () => cancelAnimationFrame(id);
-  }, [
-    viewMode,
-    activeFilter,
-    baseCount,
-    middleOffset,
-    isCoarsePointer,
-    scrollToCard,
-  ]);
+  }, [viewMode, activeFilter, baseCount, middleOffset, isCoarsePointer]);
 
   return (
-    <section className="min-h-screen bg-[#efe6db] text-[#1b120d]">
+    <section ref={rootRef} className="min-h-screen bg-[#efe6db] text-[#1b120d]">
       <div className="px-6 py-8 md:px-8 lg:px-10 xl:px-12">
         <div className="mx-auto max-w-[1600px]">
           <div className="text-center">
-            <h1 className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]">
+            <h1
+              ref={titleRef}
+              className="text-[clamp(3.8rem,9vw,7rem)] font-light leading-[0.94] tracking-[-0.06em]"
+            >
               PROJECTS
             </h1>
           </div>
 
-          <div className="relative z-20 mt-10 grid gap-5 overflow-visible lg:mt-12 lg:grid-cols-[220px_1fr_220px] lg:items-center">
+          <div
+            ref={controlsRef}
+            className="relative z-20 mt-10 grid gap-5 overflow-visible lg:mt-12 lg:grid-cols-[220px_1fr_220px] lg:items-center"
+          >
             <motion.div
               ref={filterTriggerRef}
               className="relative z-[80] w-fit overflow-visible"
@@ -1047,7 +1154,7 @@ export function WorkShowcase() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 lg:justify-end">
+            <div className="flex flex-wrap items-center gap-2 lg:justify-end">
               <ControlButton
                 active={viewMode === "split"}
                 onClick={() => changeViewMode("split")}
@@ -1117,7 +1224,7 @@ export function WorkShowcase() {
                   }
                   className={`mt-8 overflow-x-auto overflow-y-hidden select-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
                     isCoarsePointer
-                      ? "touch-pan-x snap-x snap-mandatory overscroll-x-contain scroll-smooth"
+                      ? "snap-x snap-mandatory overscroll-x-contain scroll-smooth"
                       : "touch-pan-y cursor-grab active:cursor-grabbing"
                   }`}
                   style={
@@ -1131,6 +1238,7 @@ export function WorkShowcase() {
                       const baseIndex = isCoarsePointer
                         ? loopIndex
                         : mod(loopIndex, baseCount);
+
                       const isActive = baseIndex === safeActiveIndex;
 
                       return (
@@ -1138,7 +1246,7 @@ export function WorkShowcase() {
                           key={`${project.id}-${loopIndex}`}
                           data-carousel-item
                           variants={layoutItemVariants}
-                          className={`shrink-0 ${isCoarsePointer ? "snap-center" : ""}`}
+                          className={isCoarsePointer ? "snap-center" : ""}
                         >
                           <InteractiveProjectCard
                             project={project}
@@ -1154,6 +1262,7 @@ export function WorkShowcase() {
                               ) {
                                 return;
                               }
+
                               openProject(project);
                             }}
                           />
@@ -1174,7 +1283,11 @@ export function WorkShowcase() {
                   className="mt-8 grid gap-5 xl:grid-cols-2"
                 >
                   {filteredProjects.map((project) => (
-                    <div key={project.id} className="w-full">
+                    <motion.div
+                      key={project.id}
+                      variants={layoutItemVariants}
+                      data-flip-id={project.id}
+                    >
                       <InteractiveProjectCard
                         project={project}
                         widthClass="w-full"
@@ -1182,7 +1295,7 @@ export function WorkShowcase() {
                         coarsePointer={isCoarsePointer}
                         onClick={() => openProject(project)}
                       />
-                    </div>
+                    </motion.div>
                   ))}
                 </motion.div>
               ) : null}
@@ -1197,7 +1310,11 @@ export function WorkShowcase() {
                   className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
                 >
                   {filteredProjects.map((project) => (
-                    <div key={project.id} className="w-full">
+                    <motion.div
+                      key={project.id}
+                      variants={layoutItemVariants}
+                      data-flip-id={project.id}
+                    >
                       <InteractiveProjectCard
                         project={project}
                         widthClass="w-full"
@@ -1205,8 +1322,9 @@ export function WorkShowcase() {
                         coarsePointer={isCoarsePointer}
                         onClick={() => openProject(project)}
                       />
-                    </div>
+                    </motion.div>
                   ))}
+
                   {showGridAmbientFill ? (
                     <GalleryTriggerFill span={gridAmbientSpan as 1 | 2} />
                   ) : null}

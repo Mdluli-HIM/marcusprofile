@@ -11,13 +11,13 @@ type StackItem = {
 };
 
 const stackItems: StackItem[] = [
-  { name: "typescript", icon: "/icons/typescript.png" },
+  { name: "TypeScript", icon: "/icons/typescript.png" },
   { name: "JavaScript", icon: "/icons/javascript.png" },
   { name: "React", icon: "/icons/react.png" },
   { name: "GSAP", icon: "/icons/gsap.png" },
   { name: "Figma", icon: "/icons/figma.png" },
   { name: "MongoDB", icon: "/icons/mongodb.png" },
-  { name: "Node", icon: "/icons/node.png" },
+  { name: "Node.js", icon: "/icons/node.png" },
 ];
 
 function PrimaryButton({
@@ -175,7 +175,7 @@ export default function HomePage() {
                 }}
                 className="text-[0.78rem] uppercase tracking-[0.28em] text-white/45"
               >
-                Frontend Developer / Motion / UI Systems
+                Full-Stack Software Development / Systems / Finished Demos
               </motion.p>
 
               <div className="mt-6 overflow-hidden">
@@ -212,9 +212,12 @@ export default function HomePage() {
                 }}
                 className="mt-10 max-w-[560px] text-[1.18rem] leading-[1.7] text-white/72"
               >
-                I build visually sharp, unconventional frontend experiences with
-                strong layout thinking, motion detail, and personality that
-                makes employers remember the work.
+                I design and build full-stack digital products, software
+                systems, SaaS platforms, e-commerce experiences, dashboards,
+                portals, and custom web applications. The work shown here is a
+                collection of finished demos created to demonstrate complete
+                product thinking, interface quality, and practical software
+                development.
               </motion.p>
 
               <motion.div
@@ -231,8 +234,10 @@ export default function HomePage() {
                 }}
                 className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               >
-                <PrimaryButton href="/work">View Work</PrimaryButton>
-                <SecondaryButton href="/contact">Contact</SecondaryButton>
+                <PrimaryButton href="/work">View Finished Demos</PrimaryButton>
+                <SecondaryButton href="/contact">
+                  Start a Project
+                </SecondaryButton>
               </motion.div>
 
               <motion.div
@@ -254,25 +259,31 @@ export default function HomePage() {
                     Approach
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    Graphic layouts, restrained motion, and premium interaction.
+                    I approach every project as a complete digital system —
+                    combining strategy, interface design, frontend development,
+                    backend structure, and real user workflows.
                   </p>
                 </div>
 
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
-                    Focus
+                    What I Build
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    Brand sites, portfolios, landing pages, and motion-first UI.
+                    Full-stack web applications, SaaS platforms, e-commerce
+                    systems, admin dashboards, booking flows, portals, APIs,
+                    databases, and premium brand-led digital experiences.
                   </p>
                 </div>
 
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
-                    Based In
+                    Portfolio
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    South Africa — available for frontend and creative web work.
+                    Every featured project is a finished demo or case study,
+                    built to show how an idea can move from concept into a
+                    structured, working, presentable digital product.
                   </p>
                 </div>
               </motion.div>

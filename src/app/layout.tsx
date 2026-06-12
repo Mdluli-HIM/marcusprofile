@@ -5,7 +5,6 @@ export const metadata: Metadata = {
   title: "Marcus Mdluli",
   description: "Frontend developer portfolio",
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -13,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body suppressHydrationWarning>{children}</body>
     </html>
   );
 }
