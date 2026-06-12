@@ -316,17 +316,17 @@ export const projects: WorkProject[] = [
   },
   {
     id: 6,
-    slug: "premium-cannabis-store",
-    title: "PREMIUM CANNABIS STORE",
+    slug: "leaves-and-stuff",
+    title: "LEAVES AND STUFF",
     meta: "[FINISHED DEMO] — [RETAIL TECH] — [E-COMMERCE]",
     status: "Finished Demo",
     image: "/images/cannabis/image copy 4.png",
     thumb: "/images/cannabis/image copy 4.png",
-    alt: "Premium Cannabis Store retail management platform preview",
+    alt: "Leaves and Stuff retail management platform preview",
     tags: ["Platform", "Commerce"],
-    liveUrl: "https://YOUR-PREMIUM-CANNABIS-STORE-VERCEL-URL.vercel.app",
+    liveUrl: "https://leaves-and-stuff-okcm.vercel.app/",
     caseStudy: {
-      ghostTitle: "PREMIUM CANNABIS STORE",
+      ghostTitle: "LEAVES AND STUFF",
       heroImage: "/images/cannabis/image copy 4.png",
       overviewImage: "/images/cannabis/image copy 4.png",
       challengeImage: "/images/cannabis/image copy 6.png",
@@ -339,7 +339,7 @@ export const projects: WorkProject[] = [
       introHeading:
         "A finished full-stack demo for modern retail and delivery operations.",
       introBody: [
-        "Premium Cannabis Store is a finished full-stack retail and e-commerce demo designed to show how a modern store can connect customers, administrators, and delivery drivers inside one operational system.",
+        "Leaves and Stuff is a finished full-stack retail and e-commerce demo designed to show how a modern store can connect customers, administrators, and delivery drivers inside one operational system.",
         "The demo combines a mobile-first customer storefront with product discovery, persistent carts, saved addresses, checkout, order tracking, inventory management, payment confirmation, driver assignments, and operational reporting.",
       ],
       challengeHeading:
