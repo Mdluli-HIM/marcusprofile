@@ -215,7 +215,7 @@ export const projects: WorkProject[] = [
     thumb: "/images/gym/gymflow-dark.png",
     alt: "GymFlow Admin dashboard preview",
     tags: ["Platform"],
-    liveUrl: "https://YOUR-GYMFLOW-ADMIN-URL.vercel.app",
+    liveUrl: "https://gymflow-silk-delta.vercel.app/login?next=%2Fdashboard",
     caseStudy: {
       ghostTitle: "GYMFLOW",
       heroImage: "/images/gym/gymflow-admin.png",
