@@ -32,10 +32,12 @@ function CtaButton({
   href,
   label,
   external = false,
+  disabled = false,
 }: {
   href: string;
   label: string;
   external?: boolean;
+  disabled?: boolean;
 }) {
   const content = (
     <>
@@ -51,6 +53,18 @@ function CtaButton({
       </span>
     </>
   );
+
+  if (disabled) {
+    return (
+      <span
+        aria-disabled="true"
+        title="Figma link coming soon"
+        className="inline-flex cursor-not-allowed items-stretch opacity-45"
+      >
+        {content}
+      </span>
+    );
+  }
 
   if (external) {
     return (
@@ -82,6 +96,7 @@ export default function WorkProjectPage() {
   }
 
   const { caseStudy } = project;
+  const hasFigmaUrl = Boolean(project.figmaUrl?.trim());
 
   return (
     <SiteShell>
@@ -127,11 +142,17 @@ export default function WorkProjectPage() {
                   {project.title}
                 </h2>
 
-                <div className="mt-8">
+                <div className="mt-8 flex flex-wrap gap-4">
                   <CtaButton
                     href={project.liveUrl}
-                    label="Live View"
+                    label="View Live Site"
                     external
+                  />
+                  <CtaButton
+                    href={project.figmaUrl ?? "#"}
+                    label="View in Figma"
+                    external
+                    disabled={!hasFigmaUrl}
                   />
                 </div>
 
@@ -424,6 +445,12 @@ export default function WorkProjectPage() {
                 href={project.liveUrl}
                 label="View Live Site"
                 external
+              />
+              <CtaButton
+                href={project.figmaUrl ?? "#"}
+                label="View in Figma"
+                external
+                disabled={!hasFigmaUrl}
               />
               <CtaButton href="/work" label="Back to Projects" />
             </motion.div>

@@ -35,7 +35,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="mt-4 inline-flex items-center bg-[#ff4d12] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.16em] text-white">
-                  Full-Stack Development / Software Systems / Product Design
+                  UI/UX Design / E-commerce / Figma / Frontend Development
                 </div>
               </motion.div>
 
@@ -50,53 +50,56 @@ export default function AboutPage() {
                 className="max-w-[760px]"
               >
                 <h1 className="max-w-[11ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
-                  I design and build complete digital systems.
+                  I design e-commerce and digital product experiences that work on mobile and desktop.
                 </h1>
 
                 <div className="mt-8 space-y-6 text-[1.02rem] leading-[1.95] text-black/56 xl:text-[1.08rem]">
                   <p>
                     I work across{" "}
                     <span className="font-semibold text-black">
-                      full-stack software development, product design, and
-                      digital systems architecture
+                      UI/UX design, e-commerce experiences, Figma design
+                      systems, and frontend development
                     </span>
-                    . My focus is on building refined, functional, and scalable
-                    products that are designed with intention and developed with
-                    structure.
+                    . My focus is on creating polished, conversion-aware
+                    interfaces — with clear typography, responsive layouts, and
+                    customer journeys that move from discovery to checkout
+                    without friction.
                   </p>
 
                   <p>
-                    I create full-stack web applications, SaaS platforms,
-                    dashboards, customer portals, e-commerce systems, internal
-                    tools, booking platforms, data-driven interfaces, and custom
-                    digital products for modern organizations.
+                    I design for fashion stores, grocery delivery, retail
+                    platforms, SaaS dashboards, brand websites, and mobile-first
+                    product experiences — documenting each project in organised
+                    Figma files with user flows, wireframes, components, desktop
+                    and mobile screens, prototypes, and developer handoff.
                   </p>
 
                   <p>
-                    My work covers both the{" "}
+                    My work covers both{" "}
                     <span className="font-semibold text-black">
-                      user-facing experience and the technical foundation behind
-                      it
+                      visual design and practical implementation awareness
                     </span>
-                    . That includes frontend interfaces, backend APIs,
-                    databases, authentication, business logic, workflows,
-                    integrations, and the overall structure that makes a product
-                    reliable and usable.
+                    . I understand breakpoints, component reuse, hover and focus
+                    states, accessibility, and what translates cleanly from
+                    Figma to HTML and CSS — so developers receive designs they
+                    can build efficiently.
                   </p>
 
                   <p>
-                    I approach every project as a complete system. I think about
-                    how the product looks, how it feels, how users move through
-                    it, how data is handled, how features connect, and how the
-                    platform can grow without becoming complicated.
+                    I approach every project by thinking about the customer
+                    first: how they browse products, use search and filters,
+                    read product details, manage their cart, and complete
+                    checkout on a phone. Mobile is not a shrunken desktop — it
+                    is designed intentionally with adapted navigation, touch
+                    targets, and layout reflow.
                   </p>
 
                   <p>
-                    My goal is to create software that feels clean and simple on
-                    the surface, but is thoughtful, scalable, and dependable
-                    underneath — whether it is for a brand, agency, startup,
-                    established company, public-facing platform, or internal
-                    business operation.
+                    My goal is to create work that looks premium and professional
+                    on the surface, while demonstrating structured UX thinking,
+                    design system discipline, and the collaborative mindset
+                    agencies expect — clear communication, organised files,
+                    deadline awareness, and willingness to iterate from feedback.
                   </p>
 
                   <p>
@@ -104,9 +107,10 @@ export default function AboutPage() {
                     <span className="font-semibold text-black">
                       South Africa
                     </span>
-                    , I build digital products for clients who need more than
-                    just a website — they need software that works, communicates
-                    clearly, and supports real operations.
+                    , I create case studies and live prototypes for employers
+                    and clients who need proven e-commerce design experience —
+                    not just beautiful homepage mockups, but complete journeys
+                    backed by Figma documentation and working interfaces.
                   </p>
                 </div>
 
@@ -125,15 +129,14 @@ export default function AboutPage() {
 
                     <div className="min-w-0">
                       <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-black">
-                        Full-Stack Software Developer — Systems / Platforms /
-                        Digital Products
+                        UI/UX Designer — E-commerce / Figma / Responsive Web
                       </h2>
                       <p className="mt-2 text-[0.98rem] leading-[1.8] text-black/52">
-                        I design and develop digital products from concept to
-                        working system — combining interface design, frontend
-                        development, backend architecture, databases, APIs,
-                        authentication, dashboards, workflows, and business
-                        logic into complete software experiences.
+                        I design premium e-commerce and product interfaces from
+                        research and user flows through Figma design systems,
+                        desktop and mobile screens, prototypes, and live builds
+                        — with development awareness that supports clean
+                        handoff and realistic implementation.
                       </p>
                     </div>
                   </div>

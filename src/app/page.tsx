@@ -175,7 +175,7 @@ export default function HomePage() {
                 }}
                 className="text-[0.78rem] uppercase tracking-[0.28em] text-white/45"
               >
-                Full-Stack Software Development / Systems / Finished Demos
+                Full-Stack UI/UX Design / E-commerce / Figma / Live Prototypes
               </motion.p>
 
               <div className="mt-6 overflow-hidden">
@@ -212,12 +212,10 @@ export default function HomePage() {
                 }}
                 className="mt-10 max-w-[560px] text-[1.18rem] leading-[1.7] text-white/72"
               >
-                I design and build full-stack digital products, software
-                systems, SaaS platforms, e-commerce experiences, dashboards,
-                portals, and custom web applications. The work shown here is a
-                collection of finished demos created to demonstrate complete
-                product thinking, interface quality, and practical software
-                development.
+                I design premium e-commerce and digital product experiences —
+                with strong UI/UX for desktop and mobile, organised Figma case
+                studies, and live prototypes that prove complete customer
+                journeys from browse to checkout.
               </motion.p>
 
               <motion.div
@@ -234,7 +232,7 @@ export default function HomePage() {
                 }}
                 className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               >
-                <PrimaryButton href="/work">View Finished Demos</PrimaryButton>
+                <PrimaryButton href="/work">View Case Studies</PrimaryButton>
                 <SecondaryButton href="/contact">
                   Start a Project
                 </SecondaryButton>
@@ -259,9 +257,10 @@ export default function HomePage() {
                     Approach
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    I approach every project as a complete digital system —
-                    combining strategy, interface design, frontend development,
-                    backend structure, and real user workflows.
+                    I start with user journeys and business goals — mapping
+                    flows in Figma, building component libraries, and designing
+                    responsive desktop and mobile screens before validating
+                    interactions in live prototypes.
                   </p>
                 </div>
 
@@ -270,9 +269,10 @@ export default function HomePage() {
                     What I Build
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    Full-stack web applications, SaaS platforms, e-commerce
-                    systems, admin dashboards, booking flows, portals, APIs,
-                    databases, and premium brand-led digital experiences.
+                    E-commerce storefronts, Shopify-inspired UX, fashion and
+                    grocery commerce, SaaS dashboards, mobile discovery apps,
+                    brand websites, design systems, and developer-ready Figma
+                    handoff.
                   </p>
                 </div>
 
@@ -281,9 +281,10 @@ export default function HomePage() {
                     Portfolio
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    Every featured project is a finished demo or case study,
-                    built to show how an idea can move from concept into a
-                    structured, working, presentable digital product.
+                    Each project is a documented case study — with Figma files,
+                    user flows, desktop and mobile designs, and live prototypes
+                    that show how customers browse, search, add to cart, and
+                    checkout.
                   </p>
                 </div>
               </motion.div>

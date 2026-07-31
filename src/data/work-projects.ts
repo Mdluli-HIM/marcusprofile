@@ -5,12 +5,14 @@ export type WorkProject = {
   slug: string;
   title: string;
   meta: string;
-  status: "Finished Demo" | "Live Demo" | "Portfolio Demo";
+  status: "Finished Demo" | "Live Demo" | "Portfolio Demo" | "In Progress";
   image: string;
   thumb: string;
   alt: string;
   tags: FilterKey[];
   liveUrl: string;
+  /** Published Figma file — replace with your file URL for each project. */
+  figmaUrl?: string;
   caseStudy: {
     ghostTitle: string;
     heroImage: string;
@@ -46,216 +48,90 @@ export const filterMenuItems: { key: FilterKey; label: string }[] = [
 
 export const projects: WorkProject[] = [
   {
-    id: 1,
-    slug: "noir-faces",
-    title: "NOIR FACES",
-    meta: "[FINISHED DEMO] — [EDITORIAL] — [PHOTOGRAPHY]",
-    status: "Finished Demo",
-    image: "/images/work/noir-faces/hero.jpg",
-    thumb: "/images/work/noir-faces/thumb.jpg",
-    alt: "Noir Faces editorial photography preview",
-    tags: ["Editorial"],
-    liveUrl: "https://studio-tau-pearl.vercel.app/",
+    id: 7,
+    slug: "freshdash-grocery",
+    title: "FRESHDASH GROCERY",
+    meta: "[IN PROGRESS] — [GROCERY E-COMMERCE] — [MOBILE-FIRST / SHOPIFY UX]",
+    status: "In Progress",
+    image: "/images/freshdash/hero.png",
+    thumb: "/images/freshdash/thumb.png",
+    alt: "FreshDash grocery delivery platform preview",
+    tags: ["Commerce"],
+    liveUrl: "https://freshdash.vercel.app/",
+    figmaUrl:
+      "https://www.figma.com/design/LDmAlTj0Ts2HP78OubQYCJ/Freshcart?node-id=0-1&t=MpdMdhx4lpF6WWRS-1",
     caseStudy: {
-      ghostTitle: "NOIR FACES",
-      heroImage: "/images/work/noir-faces/hero.jpg",
-      overviewImage: "/images/work/noir-faces/image.png",
-      challengeImage: "/images/work/noir-faces/image copy 2.png",
+      ghostTitle: "FRESHDASH",
+      heroImage: "/images/freshdash/hero.png",
+      overviewImage: "/images/freshdash/overview.png",
+      challengeImage: "/images/freshdash/challenge.png",
       galleryImages: [
-        "/images/work/noir-faces/image copy 2.png",
-        "/images/work/noir-faces/image copy 3.png",
-        "/images/work/noir-faces/image copy.png",
-        "/images/work/noir-faces/image.png",
-      ],
-      introHeading: "A finished editorial demo shaped through mood.",
-      introBody: [
-        "Noir Faces is a finished portfolio demo created as a cinematic editorial photography experience focused on atmosphere, silence, and emotional intensity.",
-        "The project demonstrates how a visual campaign can be presented through monochrome contrast, negative space, subtle texture, and a refined gallery-led interface.",
-      ],
-      challengeHeading: "Creating emotional depth through restraint.",
-      challengeBody: [
-        "The challenge was building a photography experience that felt luxurious and emotionally considered without relying on excessive visual effects.",
-        "Every frame needed to feel deliberate while still allowing the subject’s expression, composition, and movement to remain the central focus.",
-      ],
-      outcomeHeading: "A completed visual demo with a cinematic identity.",
-      outcomeBody: [
-        "The final demo presents a refined editorial series that balances elegance with intimacy.",
-        "It shows how photography, layout, pacing, and interaction can work together to create a premium visual identity for a campaign or creative studio.",
-      ],
-      details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "Portfolio Case Study" },
-        { label: "Timeline", value: "4 Months" },
-        { label: "Category", value: "Editorial / Portrait Photography" },
-        { label: "Techstack", value: "Next.js / TypeScript / GSAP / Lenis" },
-        { label: "Location", value: "Cape Town, South Africa" },
-      ],
-    },
-  },
-  {
-    id: 2,
-    slug: "spotted",
-    title: "SPOTTED",
-    meta: "[FINISHED DEMO] — [SOCIAL DISCOVERY] — [PLACES]",
-    status: "Finished Demo",
-    image: "/images/work/spotted/image.png",
-    thumb: "/images/work/spotted/image.png",
-    alt: "SPOTTED social place discovery app preview",
-    tags: ["Platform"],
-    liveUrl: "https://YOUR-SPOTTED-VERCEL-URL.vercel.app",
-    caseStudy: {
-      ghostTitle: "SPOTTED",
-      heroImage: "/images/work/spotted/image.png",
-      overviewImage: "/images/work/spotted/image copy 6.png",
-      challengeImage: "/images/work/spotted/image copy 4.png",
-      galleryImages: [
-        "/images/work/spotted/image copy 2.png",
-        "/images/work/spotted/image copy.png",
-        "/images/work/spotted/image copy 3.png",
-        "/images/work/spotted/image.png",
+        "/images/freshdash/gallery-1.png",
+        "/images/freshdash/gallery-2.png",
+        "/images/freshdash/gallery-3.png",
+        "/images/freshdash/gallery-4.png",
       ],
       introHeading:
-        "A finished demo for discovering places through real community experiences.",
+        "A mobile-first grocery storefront shaped around Shopify commerce patterns and everyday shopping behaviour.",
       introBody: [
-        "SPOTTED is a finished product demo for a social discovery platform that helps people find restaurants, cafés, nightlife spots, study spaces, outdoor places, and hidden gems based on mood, location, and intention.",
-        "The demo shows how a place discovery product can move beyond basic listings by using community stories, photos, mood tags, ratings, saved places, visited places, and shareable place links.",
+        "FreshDash is a grocery delivery case study focused on the full customer journey — from browsing categories and collections to search, product detail, cart, account, and checkout. The work demonstrates proven e-commerce UX across mobile and responsive web, with interaction patterns familiar to Shopify storefronts.",
+        "The project was designed in Figma first — with organised pages for user flows, wireframes, a component library, desktop and mobile screens, and developer handoff — then built as a live frontend prototype to show how design decisions translate into production-ready interfaces.",
       ],
       challengeHeading:
-        "Making place discovery feel more human than a normal directory.",
+        "Designing a grocery experience that handles complex commerce tasks without overwhelming mobile users.",
       challengeBody: [
-        "The challenge was to design a platform that does more than display places. It needed to help users decide where to go by showing real experiences, useful tips, social proof, and the emotional atmosphere of each location.",
-        "The interface also needed to feel premium, minimal, mobile-first, and easy to use while supporting discovery, search, filters, place profiles, stories, sharing, saving, and user contributions.",
+        "Grocery shopping online requires product discovery, filtering, favourites, quantity controls, delivery preferences, persistent carts, and account management — all within a small screen. The challenge was to structure this information clearly while keeping the experience fast and intuitive.",
+        "The design needed to adapt responsibly across breakpoints: navigation collapsing into mobile menus, product grids shifting from four columns to two, filters moving into bottom sheets, and touch-friendly controls replacing hover-dependent patterns.",
+        "Another goal was to create reusable components — product cards, cart drawers, collection headers, promotional sections — that could integrate with Shopify or a custom backend while maintaining a consistent visual language.",
       ],
       outcomeHeading:
-        "A polished finished demo that turns local places into social experiences.",
+        "A polished grocery commerce case study with complete journeys, reusable components, and live prototype validation.",
       outcomeBody: [
-        "The finished demo allows users to discover places by mood, area, and category, view place profiles, browse community stories, save places, mark places as visited, share direct place links, and explore community-led recommendations.",
-        "SPOTTED demonstrates a strong product foundation with a clean visual identity, warm editorial interface, mobile-first flows, and a scalable backend direction for authentication, places, stories, saves, visits, and share tracking.",
+        "FreshDash presents end-to-end shopping flows including category browsing, collection pages, advanced search, favourites, animated mini-cart interactions, account menus, and a streamlined checkout path — documented in Figma and validated through a working frontend build.",
+        "The interface demonstrates strong typography hierarchy, spacing discipline, mobile-first layout decisions, motion used for feedback rather than decoration, and accessibility-conscious states throughout the experience.",
+        "Combined with frontend development experience, the project shows how design and implementation work together — from Figma components and responsive constraints to HTML, CSS breakpoints, and reusable React patterns.",
+      ],
+      featuresHeading: "Customer journey covered",
+      features: [
+        "Homepage with collections, promotions, and category entry points",
+        "Collection browsing with filters and sort patterns",
+        "Product detail with variants, quantity, and add-to-cart",
+        "Search with fast results and contextual refinement",
+        "Persistent cart with mini-cart drawer and quantity controls",
+        "Account, favourites, and delivery preference screens",
+        "Checkout flow with mobile-optimised form layout",
+        "Responsive adaptation from mobile through desktop breakpoints",
       ],
       details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "Product Demo / Portfolio Case Study" },
-        { label: "Timeline", value: "Completed MVP Demo" },
+        { label: "Status", value: "In Progress" },
+        {
+          label: "Type",
+          value: "E-commerce UI/UX Case Study + Live Prototype",
+        },
+        { label: "Timeline", value: "Ongoing Personal Project" },
         {
           label: "Category",
-          value: "Social Discovery / Location Platform / Community App",
+          value: "Grocery Delivery / E-commerce / Shopify-Inspired UX",
+        },
+        {
+          label: "Figma",
+          value:
+            "Cover, Brief, User Flows, Wireframes, Design System, Components, Desktop + Mobile Screens, Prototype, Handoff",
         },
         {
           label: "Techstack",
           value:
-            "Next.js / TypeScript / Tailwind CSS / Framer Motion / Node.js / Express / Prisma / PostgreSQL",
+            "Next.js 16 / React / TypeScript / Tailwind CSS / Framer Motion / Lucide React",
         },
         {
           label: "Role",
           value:
-            "Product Design / UI Design / Frontend Development / Backend Architecture",
+            "UI/UX Design / Product Design / Design Systems / Frontend Development",
         },
-      ],
-    },
-  },
-  {
-    id: 3,
-    slug: "cocofizz",
-    title: "CocoFizz",
-    meta: "[FINISHED DEMO] — [FOOD & DRINK] — [RESTAURANT]",
-    status: "Finished Demo",
-    image: "/images/work/cocofizz/image.png",
-    thumb: "/images/work/cocofizz/image.png",
-    alt: "CocoFizz restaurant website preview",
-    tags: ["Brand"],
-    liveUrl: "https://cook-web-teal.vercel.app/",
-    caseStudy: {
-      ghostTitle: "COCOFIZZ",
-      heroImage: "/images/work/cocofizz/image copy 7.png",
-      overviewImage: "/images/work/cocofizz/image copy.png",
-      challengeImage: "/images/work/cocofizz/image.png",
-      galleryImages: [
-        "/images/work/cocofizz/image copy 2.png",
-        "/images/work/cocofizz/image copy 5.png",
-        "/images/work/cocofizz/image copy 4.png",
-        "/images/work/cocofizz/image copy 6.png",
-      ],
-      introHeading:
-        "A finished restaurant demo shaped like a premium hospitality experience.",
-      introBody: [
-        "CocoFizz is a finished brand and website demo for a high-end fast-food concept with a boutique Mediterranean feel.",
-        "The demo blends playful food visuals with a clean, premium layout using oversized typography, warm neutral tones, rounded imagery, and smooth motion that feels intentional rather than flashy.",
-      ],
-      challengeHeading: "Making fast food feel premium without losing energy.",
-      challengeBody: [
-        "The challenge was balancing bold, appetizing product presentation with a minimal art direction inspired by high-end restaurant and hospitality websites.",
-        "The interface needed to feel clean and editorial while still supporting strong branding, clear calls to action, and playful visual personality.",
-      ],
-      outcomeHeading:
-        "A completed demo with a distinctive digital brand presence.",
-      outcomeBody: [
-        "The final demo gives CocoFizz a memorable visual identity through strong typography, curated imagery, and a structured hospitality-style layout.",
-        "It shows how a restaurant or food brand can feel elevated, modern, and more memorable than a typical landing page.",
-      ],
-      details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "Brand Website Demo" },
-        { label: "Timeline", value: "Completed Concept" },
-        { label: "Category", value: "Food & Drink / Restaurant Website" },
         {
-          label: "Techstack",
-          value: "Next.js / TypeScript / Tailwind CSS / GSAP",
+          label: "Platforms",
+          value: "Mobile Web / Responsive Web / Progressive Commerce",
         },
-        { label: "Role", value: "UI Design / Frontend Development" },
-      ],
-    },
-  },
-  {
-    id: 4,
-    slug: "gymflow-admin",
-    title: "GymFlow Admin",
-    meta: "[FINISHED DEMO] — [SAAS] — [GYM MANAGEMENT]",
-    status: "Finished Demo",
-    image: "/images/gym/image.png",
-    thumb: "/images/gym/gymflow-dark.png",
-    alt: "GymFlow Admin dashboard preview",
-    tags: ["Platform"],
-    liveUrl: "https://gymflow-silk-delta.vercel.app/login?next=%2Fdashboard",
-    caseStudy: {
-      ghostTitle: "GYMFLOW",
-      heroImage: "/images/gym/gymflow-admin.png",
-      overviewImage: "/images/gym/gymflow-repo.png",
-      challengeImage: "/images/gym/gymflow-dark.png",
-      galleryImages: [
-        "/images/gym/gymflow-login.png",
-        "/images/gym/gymflow-repo.png",
-        "/images/gym/image.png",
-        "/images/gym/gymflow-hero.png",
-      ],
-      introHeading:
-        "A finished SaaS demo for gym operations and member control.",
-      introBody: [
-        "GymFlow Admin is a finished full-stack SaaS demo designed to show how gyms can manage members, subscriptions, payments, check-ins, reminders, and reports from one structured system.",
-        "The product demonstrates an operational dashboard that helps staff identify paid, unpaid, expired, suspended, and active members without relying on manual records or disconnected tools.",
-      ],
-      challengeHeading:
-        "Creating a professional gym management workflow without unnecessary complexity.",
-      challengeBody: [
-        "The challenge was to design a practical system that could support everyday gym operations: member registration, plan assignment, subscription tracking, payment recording, check-ins, reminders, and reporting.",
-        "The demo needed to feel professional and scalable while staying easy for staff to understand and use during daily operations.",
-      ],
-      outcomeHeading:
-        "A completed SaaS demo ready to present as a working system.",
-      outcomeBody: [
-        "The finished demo covers the core operational workflow of a gym: create a member, assign a plan, create a subscription, record payment, check the member in, send reminders, and view business reports.",
-        "GymFlow demonstrates how a custom SaaS platform can support real operational structure, visibility, and control across membership-based businesses.",
-      ],
-      details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "SaaS Product Demo" },
-        { label: "Timeline", value: "Completed MVP Demo" },
-        { label: "Category", value: "SaaS / Gym Management / Admin System" },
-        {
-          label: "Techstack",
-          value:
-            "Next.js / TypeScript / Tailwind CSS / Node.js / Express / MongoDB",
-        },
-        { label: "Role", value: "Product Design / Frontend / Backend" },
         { label: "Location", value: "South Africa" },
       ],
     },
@@ -264,13 +140,14 @@ export const projects: WorkProject[] = [
     id: 5,
     slug: "south-side",
     title: "SOUTH SIDE",
-    meta: "[FINISHED DEMO] — [FASHION] — [E-COMMERCE]",
+    meta: "[CASE STUDY] — [FASHION E-COMMERCE] — [DESKTOP + MOBILE]",
     status: "Finished Demo",
     image: "/images/work/south-side/hero.jpg",
     thumb: "/images/work/south-side/thumb.jpg",
     alt: "South Side clothing website preview",
     tags: ["Commerce", "Brand"],
     liveUrl: "https://south-side-ten.vercel.app/",
+    figmaUrl: "",
     caseStudy: {
       ghostTitle: "SOUTH SIDE",
       heroImage: "/images/work/south-side/hero.jpg",
@@ -283,32 +160,43 @@ export const projects: WorkProject[] = [
         "/images/work/south-side/image.png",
       ],
       introHeading:
-        "A finished fashion demo built like an editorial experience.",
+        "A fashion e-commerce case study where editorial branding meets product browsing and purchase flows.",
       introBody: [
-        "South Side is a finished fashion and e-commerce demo designed for a streetwear brand with a clean, premium, and editorial visual language.",
-        "The project demonstrates how a clothing website can combine product browsing, brand storytelling, motion, and atmosphere without feeling like a generic online store.",
+        "South Side is a streetwear e-commerce case study designed to prove that a clothing store can feel like a premium fashion publication — not a generic product grid. The work covers homepage storytelling, shop browsing, product presentation, contact, and brand narrative across desktop and mobile.",
+        "Typography, image treatment, spacing, and motion were used to create a distinct brand personality while keeping navigation, product discovery, and calls to action clear for shoppers moving toward purchase.",
       ],
       challengeHeading:
-        "Creating an e-commerce experience without making it feel generic.",
+        "Balancing expressive fashion branding with the clarity e-commerce customers expect.",
       challengeBody: [
-        "The challenge was to design a website that could present clothing while still feeling like a fashion publication rather than a standard product grid.",
-        "The interface needed to feel minimal, premium, and expressive while still making the shop, product details, contact page, and brand story easy to access.",
+        "Fashion e-commerce needs strong visual identity, but customers still need to find products, understand pricing, and move through the site without confusion. The challenge was to design an experience that feels editorial and premium while supporting practical shopping tasks.",
+        "Responsive design required thoughtful adaptation — cinematic desktop layouts simplifying for mobile, navigation restructuring, product grids reflowing, and typography scaling to maintain hierarchy at every breakpoint.",
+        "The brand needed to feel confident and distinct from a luxury label to a playful streetwear label — demonstrating adaptability across different commerce personalities.",
       ],
       outcomeHeading:
-        "A completed fashion demo with motion, atmosphere, and strong brand presence.",
+        "A fashion commerce case study with strong branding, motion, and shoppable structure.",
       outcomeBody: [
-        "The finished demo uses cinematic page transitions, forest and sand visual modes, animated product sections, a custom contact experience, frameless image treatments, and subtle GSAP interactions.",
-        "The result is a fashion website demo that feels immersive, premium, and brand-led while still supporting product browsing and future backend expansion.",
+        "The completed case study delivers cinematic page transitions, dual visual modes, animated product sections, frameless imagery, and GSAP-driven interactions — all supporting a coherent shopping and brand experience.",
+        "The project demonstrates typography hierarchy, layout discipline, white space, visual balance, and brand consistency applied across a full customer-facing storefront.",
+        "Documented in Figma with desktop and mobile screens, the work shows how a fashion brand can stand apart from template-based e-commerce while remaining usable and conversion-aware.",
+      ],
+      featuresHeading: "Customer journey covered",
+      features: [
+        "Editorial homepage with brand storytelling and shop entry",
+        "Product browsing with image-led merchandising",
+        "Product detail and visual framing",
+        "Contact and brand narrative pages",
+        "Responsive navigation and layout adaptation",
+        "Motion and transition design for atmosphere",
       ],
       details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "Fashion E-commerce Demo" },
-        { label: "Timeline", value: "Completed Demo" },
-        { label: "Category", value: "Fashion / E-commerce / Brand Website" },
+        { label: "Status", value: "Case Study / Live Prototype" },
+        { label: "Type", value: "Fashion E-commerce UI/UX Case Study" },
+        { label: "Timeline", value: "Completed Case Study" },
+        { label: "Category", value: "Fashion / E-commerce / Brand Experience" },
         { label: "Techstack", value: "Next.js / TypeScript / GSAP / CSS" },
         {
           label: "Role",
-          value: "Frontend Development / UI Design / Motion Design",
+          value: "UI/UX Design / Visual Design / Motion / Frontend Development",
         },
         { label: "Location", value: "South Africa" },
       ],
@@ -318,13 +206,14 @@ export const projects: WorkProject[] = [
     id: 6,
     slug: "leaves-and-stuff",
     title: "LEAVES AND STUFF",
-    meta: "[FINISHED DEMO] — [RETAIL TECH] — [E-COMMERCE]",
+    meta: "[CASE STUDY] — [RETAIL E-COMMERCE] — [STORE + CHECKOUT + DELIVERY]",
     status: "Finished Demo",
     image: "/images/cannabis/image copy 4.png",
     thumb: "/images/cannabis/image copy 4.png",
     alt: "Leaves and Stuff retail management platform preview",
     tags: ["Platform", "Commerce"],
     liveUrl: "https://leaves-and-stuff-okcm.vercel.app/",
+    figmaUrl: "",
     caseStudy: {
       ghostTitle: "LEAVES AND STUFF",
       heroImage: "/images/cannabis/image copy 4.png",
@@ -337,32 +226,44 @@ export const projects: WorkProject[] = [
         "/images/cannabis/image copy.png",
       ],
       introHeading:
-        "A finished full-stack demo for modern retail and delivery operations.",
+        "A full retail e-commerce case study connecting mobile storefront, checkout, admin operations, and delivery.",
       introBody: [
-        "Leaves and Stuff is a finished full-stack retail and e-commerce demo designed to show how a modern store can connect customers, administrators, and delivery drivers inside one operational system.",
-        "The demo combines a mobile-first customer storefront with product discovery, persistent carts, saved addresses, checkout, order tracking, inventory management, payment confirmation, driver assignments, and operational reporting.",
+        "Leaves and Stuff demonstrates end-to-end retail e-commerce UX — a mobile-first customer storefront with product discovery, persistent carts, saved addresses, checkout, and order tracking, alongside admin and driver interfaces for operational fulfilment.",
+        "The case study shows how a single design system can span multiple user roles while keeping the customer shopping journey simple, fast, and conversion-focused on mobile.",
       ],
       challengeHeading:
-        "Connecting the complete retail and delivery workflow without creating a complicated experience.",
+        "Designing a complete retail workflow without sacrificing the customer shopping experience.",
       challengeBody: [
-        "The main challenge was designing a system that could support three different user experiences: customers purchasing products, administrators managing store operations, and drivers completing deliveries.",
-        "The platform needed to manage products, stock, payments, customer accounts, delivery assignments, order statuses, failed deliveries, and tap-on-delivery payments while remaining simple, responsive, and easy to use.",
-        "A consistent visual system was also required across the customer storefront, admin dashboard, driver portal, authentication pages, forms, product pages, and operational tools.",
+        "Retail platforms must support customers buying products, staff managing orders and inventory, and drivers completing deliveries — each with different priorities and screen requirements. The UX challenge was maintaining clarity across all three without visual inconsistency.",
+        "The customer storefront needed proven e-commerce patterns: browse, search, product detail, cart, checkout, order status, and account management — optimised for mobile shoppers who form the majority of online retail traffic.",
+        "A shared component library, typography system, and spacing rules were required across storefront, admin dashboard, driver portal, authentication, and form-heavy operational screens.",
       ],
       outcomeHeading:
-        "A completed retail platform demo with customer, admin, and delivery flows.",
+        "A retail e-commerce case study with documented customer journeys and multi-role interface design.",
       outcomeBody: [
-        "The finished demo delivers a mobile-first customer shopping experience alongside an administrative control centre for managing orders, products, inventory, payments, customers, drivers, and store settings.",
-        "Administrators can confirm and pack orders, assign drivers, monitor inventory, record stock movements, confirm customer payments, manage product availability, and track the full order lifecycle from checkout to delivery.",
-        "Drivers can receive assigned deliveries, view customer and address information, confirm payments at handover, complete orders, and record failed delivery reasons.",
+        "The completed work delivers a mobile-first shopping experience with full checkout and order tracking, plus admin tools for order management, inventory, payments, and driver assignment — all within a consistent visual system.",
+        "The project demonstrates responsive design awareness, reusable components, operational UX for data-heavy dashboards, and the development handoff thinking needed to ship complex commerce platforms.",
+        "Figma documentation covers user flows, wireframes, component variants, and desktop/mobile screens for both customer and operational experiences.",
+      ],
+      featuresHeading: "Customer journey covered",
+      features: [
+        "Mobile storefront with product discovery and categories",
+        "Product detail, cart, and persistent basket behaviour",
+        "Checkout with saved addresses and order confirmation",
+        "Order tracking and account management",
+        "Admin order fulfilment and inventory workflows",
+        "Driver delivery assignment and handover screens",
       ],
       details: [
-        { label: "Status", value: "Finished Demo" },
-        { label: "Type", value: "Full-Stack Retail Platform Demo" },
-        { label: "Timeline", value: "Completed MVP Demo" },
+        { label: "Status", value: "Case Study / Live Prototype" },
+        {
+          label: "Type",
+          value: "Retail E-commerce + Operations UI/UX Case Study",
+        },
+        { label: "Timeline", value: "Completed Case Study" },
         {
           label: "Category",
-          value: "Retail Technology / E-commerce / SaaS Platform",
+          value: "Retail / E-commerce / Multi-Role Platform UX",
         },
         {
           label: "Techstack",
@@ -372,13 +273,252 @@ export const projects: WorkProject[] = [
         {
           label: "Role",
           value:
-            "Software Architecture / Full-Stack Development / UI Design / Database Design",
+            "UI/UX Design / Product Design / Full-Stack Development / Design Systems",
         },
         {
           label: "Platforms",
           value: "Customer Store / Admin Dashboard / Driver Portal",
         },
         { label: "Location", value: "South Africa" },
+      ],
+    },
+  },
+  {
+    id: 2,
+    slug: "spotted",
+    title: "SPOTTED",
+    meta: "[CASE STUDY] — [MOBILE PLATFORM] — [DISCOVERY UX]",
+    status: "Finished Demo",
+    image: "/images/work/spotted/image.png",
+    thumb: "/images/work/spotted/image.png",
+    alt: "SPOTTED social place discovery app preview",
+    tags: ["Platform"],
+    liveUrl: "https://YOUR-SPOTTED-VERCEL-URL.vercel.app",
+    figmaUrl: "",
+    caseStudy: {
+      ghostTitle: "SPOTTED",
+      heroImage: "/images/work/spotted/image.png",
+      overviewImage: "/images/work/spotted/image copy 6.png",
+      challengeImage: "/images/work/spotted/image copy 4.png",
+      galleryImages: [
+        "/images/work/spotted/image copy 2.png",
+        "/images/work/spotted/image copy.png",
+        "/images/work/spotted/image copy 3.png",
+        "/images/work/spotted/image.png",
+      ],
+      introHeading:
+        "A mobile-first discovery platform case study focused on search, filters, profiles, and social UX.",
+      introBody: [
+        "SPOTTED is a place-discovery case study that helps users find restaurants, cafés, nightlife, study spaces, and hidden gems through mood, location, and community stories — designed mobile-first with clear navigation and task completion paths.",
+        "The work demonstrates UX thinking beyond static screens: how users search and filter, evaluate options through profiles and social proof, save places, share links, and contribute content without friction.",
+      ],
+      challengeHeading:
+        "Turning place discovery into an intuitive mobile experience rather than a flat directory.",
+      challengeBody: [
+        "Discovery products must help users decide quickly — combining search, filters, mood tags, ratings, photos, and stories into scannable mobile layouts without overwhelming the screen.",
+        "The interface needed responsive adaptation, bottom-sheet patterns for filters, card-based browsing, profile pages with clear hierarchy, and accessible touch targets throughout.",
+        "Design system components — cards, tags, navigation, profile modules — were structured in Figma for reuse and developer handoff.",
+      ],
+      outcomeHeading:
+        "A mobile platform case study proving search, filter, profile, and social discovery UX.",
+      outcomeBody: [
+        "The completed case study covers mood-based discovery, place profiles, community stories, save and share flows, and contribution patterns — all within a warm, editorial mobile interface.",
+        "The project demonstrates user journey mapping, wireframe-to-final design progression, component-based Figma structure, and frontend implementation that validates interaction decisions.",
+      ],
+      details: [
+        { label: "Status", value: "Case Study / Live Prototype" },
+        { label: "Type", value: "Mobile Platform UI/UX Case Study" },
+        { label: "Timeline", value: "Completed Case Study" },
+        {
+          label: "Category",
+          value: "Social Discovery / Mobile UX / Platform Design",
+        },
+        {
+          label: "Techstack",
+          value:
+            "Next.js / TypeScript / Tailwind CSS / Framer Motion / Node.js / Express / Prisma / PostgreSQL",
+        },
+        {
+          label: "Role",
+          value: "UI/UX Design / Product Design / Frontend Development",
+        },
+      ],
+    },
+  },
+  {
+    id: 3,
+    slug: "cocofizz",
+    title: "CocoFizz",
+    meta: "[CASE STUDY] — [HOSPITALITY BRAND] — [TYPOGRAPHY + LAYOUT]",
+    status: "Finished Demo",
+    image: "/images/work/cocofizz/image.png",
+    thumb: "/images/work/cocofizz/image.png",
+    alt: "CocoFizz restaurant website preview",
+    tags: ["Brand"],
+    liveUrl: "https://cook-web-teal.vercel.app/",
+    figmaUrl: "",
+    caseStudy: {
+      ghostTitle: "COCOFIZZ",
+      heroImage: "/images/work/cocofizz/image copy 7.png",
+      overviewImage: "/images/work/cocofizz/image copy.png",
+      challengeImage: "/images/work/cocofizz/image.png",
+      galleryImages: [
+        "/images/work/cocofizz/image copy 2.png",
+        "/images/work/cocofizz/image copy 5.png",
+        "/images/work/cocofizz/image copy 4.png",
+        "/images/work/cocofizz/image copy 6.png",
+      ],
+      introHeading:
+        "A hospitality brand case study proving typography, layout, and visual identity across a premium web experience.",
+      introBody: [
+        "CocoFizz is a restaurant and hospitality brand case study that elevates a fast-food concept through boutique typography, warm neutral palettes, rounded imagery, and intentional motion — demonstrating how branding and UI work together on desktop and mobile.",
+        "The project shows ability to adapt visual personality for different brand contexts: here, playful appetite meets premium hospitality restraint.",
+      ],
+      challengeHeading:
+        "Making fast food feel premium through typography, spacing, and brand-led layout.",
+      challengeBody: [
+        "Hospitality websites need clear hierarchy for headings, body copy, promotional messages, and calls to action — while photography and food imagery carry emotional weight.",
+        "Layout decisions around grids, white space, alignment, and section pacing were critical to avoid a template feel while keeping navigation and key actions obvious.",
+        "Responsive breakpoints required the editorial desktop layout to simplify gracefully on mobile without losing brand character.",
+      ],
+      outcomeHeading:
+        "A brand-led case study with strong typography, layout discipline, and hospitality UX.",
+      outcomeBody: [
+        "The completed work delivers a distinctive digital brand presence through oversized type, curated food photography, structured section design, and motion timed for appetite and flow.",
+        "The case study demonstrates branding consistency — colour, font, imagery, tone, and interface elements applied cohesively — and documents the design process in Figma from concept through final screens.",
+      ],
+      details: [
+        { label: "Status", value: "Case Study / Live Prototype" },
+        { label: "Type", value: "Brand + Hospitality UI/UX Case Study" },
+        { label: "Timeline", value: "Completed Case Study" },
+        {
+          label: "Category",
+          value: "Food & Drink / Brand Website / Visual Design",
+        },
+        {
+          label: "Techstack",
+          value: "Next.js / TypeScript / Tailwind CSS / GSAP",
+        },
+        {
+          label: "Role",
+          value: "UI/UX Design / Visual Design / Frontend Development",
+        },
+      ],
+    },
+  },
+  {
+    id: 4,
+    slug: "gymflow-admin",
+    title: "GymFlow Admin",
+    meta: "[CASE STUDY] — [SAAS DASHBOARD] — [OPERATIONS UX]",
+    status: "Finished Demo",
+    image: "/images/gym/image.png",
+    thumb: "/images/gym/gymflow-dark.png",
+    alt: "GymFlow Admin dashboard preview",
+    tags: ["Platform"],
+    liveUrl: "https://gymflow-silk-delta.vercel.app/login?next=%2Fdashboard",
+    figmaUrl: "",
+    caseStudy: {
+      ghostTitle: "GYMFLOW",
+      heroImage: "/images/gym/gymflow-admin.png",
+      overviewImage: "/images/gym/gymflow-repo.png",
+      challengeImage: "/images/gym/gymflow-dark.png",
+      galleryImages: [
+        "/images/gym/gymflow-login.png",
+        "/images/gym/gymflow-repo.png",
+        "/images/gym/image.png",
+        "/images/gym/gymflow-hero.png",
+      ],
+      introHeading:
+        "A SaaS dashboard case study focused on data clarity, workflow UX, and operational decision-making.",
+      introBody: [
+        "GymFlow Admin is a gym management dashboard case study designed for staff who need to register members, track subscriptions, record payments, manage check-ins, and read reports — without confusion or unnecessary complexity.",
+        "The work demonstrates UX for data-heavy interfaces: clear status indicators, scannable tables, logical information hierarchy, and flows that reduce cognitive load during daily operations.",
+      ],
+      challengeHeading:
+        "Designing an admin system that stays readable under real operational pressure.",
+      challengeBody: [
+        "Dashboard UX must prioritise quick reading and decision-making — membership states, payment status, and check-in workflows need to be visible at a glance with consistent labelling and spacing.",
+        "Component reuse across login, dashboard, member profiles, forms, and reports was structured in Figma with Auto Layout, variants, and shared styles for efficient iteration and handoff.",
+        "The interface needed to feel professional and trustworthy while supporting frequent daily use on desktop and tablet.",
+      ],
+      outcomeHeading:
+        "A SaaS dashboard case study with clear operational UX and structured Figma documentation.",
+      outcomeBody: [
+        "The completed case study covers the core gym workflow from member creation through subscription, payment, check-in, reminders, and reporting — with UI designed for clarity over decoration.",
+        "The project demonstrates design system thinking applied to admin interfaces, responsive layout awareness, and frontend development that validates form states, feedback, and navigation patterns.",
+      ],
+      details: [
+        { label: "Status", value: "Case Study / Live Prototype" },
+        { label: "Type", value: "SaaS Dashboard UI/UX Case Study" },
+        { label: "Timeline", value: "Completed Case Study" },
+        { label: "Category", value: "SaaS / Admin UX / Operations Dashboard" },
+        {
+          label: "Techstack",
+          value:
+            "Next.js / TypeScript / Tailwind CSS / Node.js / Express / MongoDB",
+        },
+        {
+          label: "Role",
+          value: "UI/UX Design / Product Design / Frontend + Backend",
+        },
+        { label: "Location", value: "South Africa" },
+      ],
+    },
+  },
+  {
+    id: 1,
+    slug: "noir-faces",
+    title: "NOIR FACES",
+    meta: "[CASE STUDY] — [EDITORIAL] — [TYPOGRAPHY + VISUAL HIERARCHY]",
+    status: "Finished Demo",
+    image: "/images/work/noir-faces/hero.jpg",
+    thumb: "/images/work/noir-faces/thumb.jpg",
+    alt: "Noir Faces editorial photography preview",
+    tags: ["Editorial"],
+    liveUrl: "https://studio-tau-pearl.vercel.app/",
+    figmaUrl: "",
+    caseStudy: {
+      ghostTitle: "NOIR FACES",
+      heroImage: "/images/work/noir-faces/hero.jpg",
+      overviewImage: "/images/work/noir-faces/image.png",
+      challengeImage: "/images/work/noir-faces/image copy 2.png",
+      galleryImages: [
+        "/images/work/noir-faces/image copy 2.png",
+        "/images/work/noir-faces/image copy 3.png",
+        "/images/work/noir-faces/image copy.png",
+        "/images/work/noir-faces/image.png",
+      ],
+      introHeading:
+        "An editorial case study demonstrating typography restraint, spacing, and visual hierarchy.",
+      introBody: [
+        "Noir Faces is an editorial photography case study built around monochrome contrast, negative space, and gallery-led pacing — proving how layout, typography, and imagery create premium digital experiences without clutter.",
+        "The work shows strong fundamentals applicable across commerce and brand projects: clear hierarchy, consistent spacing, intentional white space, and responsive image treatment.",
+      ],
+      challengeHeading:
+        "Creating emotional depth through layout restraint rather than visual noise.",
+      challengeBody: [
+        "Editorial experiences require typography that supports mood without competing with imagery — headings, captions, and navigation text scaled and spaced to guide attention deliberately.",
+        "Gallery sequencing, scroll pacing, and minimal interface chrome were designed to keep photography central while maintaining usable navigation on mobile and desktop.",
+        "The case study documents wireframe-to-final progression in Figma, with layout grids and type styles applied consistently across breakpoints.",
+      ],
+      outcomeHeading:
+        "An editorial case study proving typography, layout, and visual hierarchy craft.",
+      outcomeBody: [
+        "The completed work presents a refined editorial series where elegance and intimacy balance through disciplined layout, restrained type, and cinematic pacing.",
+        "The project demonstrates branding sensibility — tone, contrast, and visual rhythm applied consistently — skills directly transferable to luxury fashion, beauty, and lifestyle e-commerce contexts.",
+      ],
+      details: [
+        { label: "Status", value: "Case Study / Live Prototype" },
+        { label: "Type", value: "Editorial UI/UX + Visual Design Case Study" },
+        { label: "Timeline", value: "4 Months" },
+        { label: "Category", value: "Editorial / Photography / Visual Design" },
+        { label: "Techstack", value: "Next.js / TypeScript / GSAP / Lenis" },
+        {
+          label: "Role",
+          value: "UI/UX Design / Visual Design / Frontend Development",
+        },
+        { label: "Location", value: "Cape Town, South Africa" },
       ],
     },
   },

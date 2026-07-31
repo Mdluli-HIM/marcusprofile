@@ -3,7 +3,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Marcus Mdluli",
-  description: "Frontend developer portfolio",
+  description:
+    "UI/UX designer portfolio — e-commerce case studies, Figma files, and live prototypes for desktop and mobile.",
 };
 export default function RootLayout({
   children,
