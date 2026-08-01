@@ -60,7 +60,7 @@ function SecondaryButton({
       <motion.span
         whileHover={{ y: -1 }}
         transition={{ duration: 0.18 }}
-        className="inline-flex h-[54px] items-center border border-white/12 bg-transparent px-7 text-[0.92rem] font-semibold uppercase tracking-[0.08em] text-white"
+        className="inline-flex h-[54px] items-center bg-[#6d9472] px-7 text-[0.92rem] font-semibold uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]"
       >
         <span>{children}</span>
       </motion.span>

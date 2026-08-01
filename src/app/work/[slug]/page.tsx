@@ -33,18 +33,29 @@ function CtaButton({
   label,
   external = false,
   disabled = false,
+  variant = "primary",
 }: {
   href: string;
   label: string;
   external?: boolean;
   disabled?: boolean;
+  variant?: "primary" | "figma";
 }) {
+  const surfaceClass =
+    variant === "figma"
+      ? "bg-[#6d9472] text-black"
+      : "bg-[#ff4d12] text-black";
+
   const content = (
     <>
-      <span className="inline-flex h-[56px] items-center bg-[#ff4d12] px-7 text-[0.85rem] font-medium uppercase tracking-[0.08em] text-black transition hover:brightness-[0.98]">
+      <span
+        className={`inline-flex h-[56px] items-center px-7 text-[0.85rem] font-medium uppercase tracking-[0.08em] transition hover:brightness-[0.98] ${surfaceClass}`}
+      >
         {label}
       </span>
-      <span className="inline-flex h-[56px] w-[56px] items-center justify-center bg-[#ff4d12] text-black">
+      <span
+        className={`inline-flex h-[56px] w-[56px] items-center justify-center ${surfaceClass}`}
+      >
         {external ? (
           <ArrowUpRight className="h-5 w-5" />
         ) : (
@@ -152,6 +163,7 @@ export default function WorkProjectPage() {
                     href={project.figmaUrl ?? "#"}
                     label="View in Figma"
                     external
+                    variant="figma"
                     disabled={!hasFigmaUrl}
                   />
                 </div>
@@ -450,6 +462,7 @@ export default function WorkProjectPage() {
                 href={project.figmaUrl ?? "#"}
                 label="View in Figma"
                 external
+                variant="figma"
                 disabled={!hasFigmaUrl}
               />
               <CtaButton href="/work" label="Back to Projects" />
