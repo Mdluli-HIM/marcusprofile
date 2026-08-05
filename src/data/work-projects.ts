@@ -57,7 +57,7 @@ export const projects: WorkProject[] = [
     thumb: "/images/freshdash/thumb.png",
     alt: "FreshDash grocery delivery platform preview",
     tags: ["Commerce"],
-    liveUrl: "https://freshdash.vercel.app/",
+    liveUrl: "https://shopify-gross.vercel.app/",
     figmaUrl:
       "https://www.figma.com/design/LDmAlTj0Ts2HP78OubQYCJ/Freshcart?node-id=0-1&t=MpdMdhx4lpF6WWRS-1",
     caseStudy: {
