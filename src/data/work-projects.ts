@@ -147,7 +147,8 @@ export const projects: WorkProject[] = [
     alt: "Xibelani traditional Tsonga attire website preview",
     tags: ["Commerce", "Brand"],
     liveUrl: "https://south-side-ten.vercel.app/",
-    figmaUrl: "",
+    figmaUrl:
+      "https://www.figma.com/design/LWS187Rr0P5u7xIpyi6hzI/xibelani?node-id=169-425&t=OHnxm7dBDOCXlpIM-1",
     caseStudy: {
       ghostTitle: "XIBELANI",
       heroImage: "/images/work/xibelani/hero.jpg",
@@ -425,7 +426,7 @@ export const projects: WorkProject[] = [
     alt: "GymFlow Admin dashboard preview",
     tags: ["Platform"],
     liveUrl: "https://gymflow-silk-delta.vercel.app/login?next=%2Fdashboard",
-    figmaUrl: "",
+    figmaUrl: "https://www.figma.com/design/ki8dhOnBVZB6RCZBMoZ3vF/gymflow?node-id=0-1&t=jhiqKRCWjvooF0UK-1",
     caseStudy: {
       ghostTitle: "GYMFLOW",
       heroImage: "/images/gym/gymflow-admin.png",
