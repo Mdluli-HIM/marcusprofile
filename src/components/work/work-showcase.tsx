@@ -923,10 +923,8 @@ export function WorkShowcase() {
               PROJECTS
             </h1>
             <p className="mx-auto mt-5 max-w-[640px] text-[0.95rem] leading-[1.85] text-[#1b120d]/58">
-              E-commerce and product case studies with Figma documentation,
-              mobile-first customer journeys, and live prototypes — from
-              grocery and fashion storefronts to SaaS dashboards and brand
-              experiences.
+              Selected software projects — web apps, platforms, and product
+              work across frontend, backend, and UI.
             </p>
           </div>
 

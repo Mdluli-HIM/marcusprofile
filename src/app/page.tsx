@@ -113,7 +113,7 @@ function AnimatedPortraitPanel() {
     >
       <motion.div style={{ scale: imageScale }} className="absolute inset-0">
         <Image
-          src="/images/profile-hero.jpg"
+          src="/images/profile/image copy.png"
           alt="Marcus Mdluli portrait"
           fill
           sizes="(max-width: 1023px) 100vw, 50vw"
@@ -175,7 +175,7 @@ export default function HomePage() {
                 }}
                 className="text-[0.78rem] uppercase tracking-[0.28em] text-white/45"
               >
-                Full-Stack UI/UX Design / E-commerce / Figma / Live Prototypes
+                Software Design / Engineering / Frontend & Backend
               </motion.p>
 
               <div className="mt-6 overflow-hidden">
@@ -212,10 +212,9 @@ export default function HomePage() {
                 }}
                 className="mt-10 max-w-[560px] text-[1.18rem] leading-[1.7] text-white/72"
               >
-                I design premium e-commerce and digital product experiences —
-                with strong UI/UX for desktop and mobile, organised Figma case
-                studies, and live prototypes that prove complete customer
-                journeys from browse to checkout.
+                Designing software to help people. I work as a software
+                designer and engineer — strong on frontend, with backend
+                experience to ship complete products.
               </motion.p>
 
               <motion.div
@@ -232,10 +231,8 @@ export default function HomePage() {
                 }}
                 className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
               >
-                <PrimaryButton href="/work">View Case Studies</PrimaryButton>
-                <SecondaryButton href="/contact">
-                  Start a Project
-                </SecondaryButton>
+                <PrimaryButton href="/work">View Work</PrimaryButton>
+                <SecondaryButton href="/contact">Get in Touch</SecondaryButton>
               </motion.div>
 
               <motion.div
@@ -254,37 +251,31 @@ export default function HomePage() {
               >
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
-                    Approach
+                    Focus
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    I start with user journeys and business goals — mapping
-                    flows in Figma, building component libraries, and designing
-                    responsive desktop and mobile screens before validating
-                    interactions in live prototypes.
+                    Useful software with clear interfaces, thoughtful UX, and
+                    code that holds up in production.
                   </p>
                 </div>
 
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
-                    What I Build
+                    Skills
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    E-commerce storefronts, Shopify-inspired UX, fashion and
-                    grocery commerce, SaaS dashboards, mobile discovery apps,
-                    brand websites, design systems, and developer-ready Figma
-                    handoff.
+                    Frontend development, UI design, product thinking, APIs,
+                    databases, and full-stack delivery.
                   </p>
                 </div>
 
                 <div>
                   <p className="text-[0.72rem] uppercase tracking-[0.22em] text-white/38">
-                    Portfolio
+                    Open To
                   </p>
                   <p className="mt-3 text-[0.98rem] leading-7 text-white/76">
-                    Each project is a documented case study — with Figma files,
-                    user flows, desktop and mobile designs, and live prototypes
-                    that show how customers browse, search, add to cart, and
-                    checkout.
+                    Software design, frontend, and full-stack roles. Based in
+                    South Africa, open globally.
                   </p>
                 </div>
               </motion.div>

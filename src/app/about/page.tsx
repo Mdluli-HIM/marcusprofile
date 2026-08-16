@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { SiteShell } from "@/components/layout/site-shell";
 
-const ABOUT_PORTRAIT = "/images/profile/profile-main.jpg";
+const ABOUT_PORTRAIT = "/images/profile/image copy.png";
 
 export default function AboutPage() {
   return (
@@ -35,7 +35,7 @@ export default function AboutPage() {
                 </div>
 
                 <div className="mt-4 inline-flex items-center bg-[#ff4d12] px-5 py-3 text-[11px] font-medium uppercase tracking-[0.16em] text-white">
-                  UI/UX Design / E-commerce / Figma / Frontend Development
+                  Software Design / Engineering / Frontend & Backend
                 </div>
               </motion.div>
 
@@ -49,68 +49,44 @@ export default function AboutPage() {
                 }}
                 className="max-w-[760px]"
               >
-                <h1 className="max-w-[11ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
-                  I design e-commerce and digital product experiences that work on mobile and desktop.
+                <h1 className="max-w-[12ch] text-[clamp(2.9rem,6vw,5.7rem)] font-semibold leading-[0.95] tracking-[-0.08em] text-black">
+                  Designing software to help people.
                 </h1>
 
                 <div className="mt-8 space-y-6 text-[1.02rem] leading-[1.95] text-black/56 xl:text-[1.08rem]">
                   <p>
-                    I work across{" "}
+                    I&apos;m a{" "}
                     <span className="font-semibold text-black">
-                      UI/UX design, e-commerce experiences, Figma design
-                      systems, and frontend development
-                    </span>
-                    . My focus is on creating polished, conversion-aware
-                    interfaces — with clear typography, responsive layouts, and
-                    customer journeys that move from discovery to checkout
-                    without friction.
+                      software designer and engineer
+                    </span>{" "}
+                    based in South Africa, open globally. I care about building
+                    products that are clear, useful, and well made — from interface and UX
+                    through to working code.
                   </p>
 
                   <p>
-                    I design for fashion stores, grocery delivery, retail
-                    platforms, SaaS dashboards, brand websites, and mobile-first
-                    product experiences — documenting each project in organised
-                    Figma files with user flows, wireframes, components, desktop
-                    and mobile screens, prototypes, and developer handoff.
-                  </p>
-
-                  <p>
-                    My work covers both{" "}
+                    My strength is{" "}
                     <span className="font-semibold text-black">
-                      visual design and practical implementation awareness
+                      frontend development and product design
                     </span>
-                    . I understand breakpoints, component reuse, hover and focus
-                    states, accessibility, and what translates cleanly from
-                    Figma to HTML and CSS — so developers receive designs they
-                    can build efficiently.
+                    , backed by backend experience with APIs, databases, and
+                    full-stack systems. I can think through the user experience
+                    and ship the product behind it.
                   </p>
 
                   <p>
-                    I approach every project by thinking about the customer
-                    first: how they browse products, use search and filters,
-                    read product details, manage their cart, and complete
-                    checkout on a phone. Mobile is not a shrunken desktop — it
-                    is designed intentionally with adapted navigation, touch
-                    targets, and layout reflow.
+                    I&apos;ve built web apps, e-commerce platforms, SaaS
+                    dashboards, and product demos — always with a focus on
+                    structure, performance, and interfaces that feel simple to
+                    use.
                   </p>
 
                   <p>
-                    My goal is to create work that looks premium and professional
-                    on the surface, while demonstrating structured UX thinking,
-                    design system discipline, and the collaborative mindset
-                    agencies expect — clear communication, organised files,
-                    deadline awareness, and willingness to iterate from feedback.
-                  </p>
-
-                  <p>
-                    Based in{" "}
+                    I&apos;m{" "}
                     <span className="font-semibold text-black">
-                      South Africa
-                    </span>
-                    , I create case studies and live prototypes for employers
-                    and clients who need proven e-commerce design experience —
-                    not just beautiful homepage mockups, but complete journeys
-                    backed by Figma documentation and working interfaces.
+                      open to software design and engineering roles
+                    </span>{" "}
+                    where I can contribute across design and development.
                   </p>
                 </div>
 
@@ -129,14 +105,11 @@ export default function AboutPage() {
 
                     <div className="min-w-0">
                       <h2 className="text-[1.45rem] font-semibold tracking-[-0.04em] text-black">
-                        UI/UX Designer — E-commerce / Figma / Responsive Web
+                        Software Designer & Engineer
                       </h2>
                       <p className="mt-2 text-[0.98rem] leading-[1.8] text-black/52">
-                        I design premium e-commerce and product interfaces from
-                        research and user flows through Figma design systems,
-                        desktop and mobile screens, prototypes, and live builds
-                        — with development awareness that supports clean
-                        handoff and realistic implementation.
+                        Frontend-led, full-stack capable. React, TypeScript,
+                        Node.js, UI design, and product delivery.
                       </p>
                     </div>
                   </div>
@@ -159,8 +132,8 @@ export default function AboutPage() {
                     href="/contact"
                     className="group inline-flex items-stretch"
                   >
-                    <span className="inline-flex h-[56px] items-center border border-black/12 bg-transparent px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-black transition-colors duration-200 group-hover:bg-black group-hover:text-white">
-                      Contact
+                    <span className="inline-flex h-[56px] items-center bg-[#6d9472] px-6 text-[0.83rem] font-medium uppercase tracking-[0.08em] text-black transition-transform duration-200 group-hover:-translate-y-[1px]">
+                      Get in Touch
                     </span>
                   </Link>
                 </div>
